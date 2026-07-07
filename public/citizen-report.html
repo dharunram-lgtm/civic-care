@@ -158,6 +158,12 @@
     </div>
   </main>
 
+  <script>
+    const _user = JSON.parse(localStorage.getItem('user') || '{}');
+    const _token = localStorage.getItem('token');
+    if (!_token) { window.location.href = '/login.html'; }
+    document.querySelector('.nav-logo').after(' <span style="font-size:0.75rem;color:var(--accent-green);font-weight:600;">' + (_user.name || 'Citizen') + '</span>');
+  </script>
   <script src="/js/citizen-report.js"></script>
 </body>
 </html>

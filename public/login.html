@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CIVIC CARE — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/surfaces.css">
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+  <nav class="report-nav" style="position:fixed;top:0;left:0;right:0;z-index:100;padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(11,17,32,0.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.05);">
+    <a href="/" class="nav-logo" style="font-weight:800;font-size:1.1rem;color:var(--text-primary);text-decoration:none;">&#127963; CIVIC CARE</a>
+    <div style="display:flex;gap:0.75rem;align-items:center;">
+      <button id="theme-toggle" class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem;">&#127769;</button>
+      <a href="/" class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem;">&#8592; Home</a>
+    </div>
+  </nav>
+
+  <div class="pulse-dots-login">
+    <div class="pulse-dot"></div>
+    <div class="pulse-dot"></div>
+    <div class="pulse-dot"></div>
+    <div class="pulse-dot"></div>
+    <div class="pulse-dot"></div>
+    <div class="pulse-dot"></div>
+  </div>
+
+  <main class="login-page" style="padding-top:6rem;">
+    <div class="login-container">
+      <div class="login-header reveal">
+        <div class="logo">CIVIC <span>CARE</span></div>
+        <p>Sign in to access your dashboard. Select your role to get started.</p>
+      </div>
+
+      <div class="role-selector reveal">
+        <div class="role-card active" data-role="CITIZEN">
+          <span class="role-icon">&#128100;</span>
+          <div class="role-name">Citizen</div>
+          <div class="role-desc">Report an issue</div>
+        </div>
+        <div class="role-card" data-role="FIELD_OFFICER">
+          <span class="role-icon">&#128188;</span>
+          <div class="role-name">Field Officer</div>
+          <div class="role-desc">Accept & resolve</div>
+        </div>
+        <div class="role-card" data-role="DEPT_HEAD">
+          <span class="role-icon">&#128200;</span>
+          <div class="role-name">Dept. Head</div>
+          <div class="role-desc">Manage department</div>
+        </div>
+        <div class="role-card" data-role="ADMIN">
+          <span class="role-icon">&#128736;</span>
+          <div class="role-name">Admin</div>
+          <div class="role-desc">Manage platform</div>
+        </div>
+      </div>
+
+      <div class="login-card glass-card reveal">
+        <div id="error-msg" class="error-msg"></div>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="login">Sign In</button>
+          <button class="tab" data-tab="register">Register</button>
+        </div>
+
+        <div id="login-section" class="form-section active">
+          <form id="login-form">
+            <div class="form-group">
+              <label for="login-email">Email</label>
+              <input type="email" id="login-email" class="form-input" placeholder="you@example.com" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input type="password" id="login-password" class="form-input" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit">Sign In</button>
+          </form>
+          <div class="form-footer">
+            Don't have an account? <a onclick="switchTabTo('register')">Register here</a>
+          </div>
+        </div>
+
+        <div id="register-section" class="form-section">
+          <form id="register-form">
+            <div class="form-group">
+              <label for="reg-name">Full Name</label>
+              <input type="text" id="reg-name" class="form-input" placeholder="John Doe" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="reg-email">Email</label>
+              <input type="email" id="reg-email" class="form-input" placeholder="you@example.com" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="reg-password">Password</label>
+              <input type="password" id="reg-password" class="form-input" placeholder="Min. 6 characters" required autocomplete="new-password">
+            </div>
+            <input type="hidden" id="reg-role" value="CITIZEN">
+            <div class="form-group" id="dept-group" style="display:none;">
+              <label for="reg-dept">Department</label>
+              <select id="reg-dept" class="form-input">
+                <option value="">Select department...</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit">Create Account</button>
+          </form>
+          <div class="form-footer">
+            Already have an account? <a onclick="switchTabTo('login')">Sign in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/login.js"></script>
+  <script>
+    function switchTabTo(tab) {
+      document.querySelector(`.tab[data-tab="${tab}"]`)?.click();
+    }
+  </script>
+</body>
+</html>
