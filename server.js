@@ -67,6 +67,22 @@ async function start() {
       console.log('[+] Default departments seeded');
     }
 
+    const User = require('./models/User');
+    const bcrypt = require('bcryptjs');
+    const adminEmail = 'dharun@admin.com';
+    const adminExists = await User.findOne({ email: adminEmail });
+    if (!adminExists) {
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash('123456', salt);
+      await User.create({
+        name: 'Admin Dharun',
+        email: adminEmail,
+        passwordHash,
+        role: 'ADMIN'
+      });
+      console.log('[+] Admin account created: dharun@admin.com');
+    }
+
     app.listen(PORT, () => {
       console.log(`[+] CIVIC CARE server running on http://localhost:${PORT}`);
     });

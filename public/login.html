@@ -32,30 +32,7 @@
     <div class="login-container">
       <div class="login-header reveal">
         <div class="logo">CIVIC <span>CARE</span></div>
-        <p>Sign in to access your dashboard. Select your role to get started.</p>
-      </div>
-
-      <div class="role-selector reveal">
-        <div class="role-card active" data-role="CITIZEN">
-          <span class="role-icon">&#128100;</span>
-          <div class="role-name">Citizen</div>
-          <div class="role-desc">Report an issue</div>
-        </div>
-        <div class="role-card" data-role="FIELD_OFFICER">
-          <span class="role-icon">&#128188;</span>
-          <div class="role-name">Field Officer</div>
-          <div class="role-desc">Accept & resolve</div>
-        </div>
-        <div class="role-card" data-role="DEPT_HEAD">
-          <span class="role-icon">&#128200;</span>
-          <div class="role-name">Dept. Head</div>
-          <div class="role-desc">Manage department</div>
-        </div>
-        <div class="role-card" data-role="ADMIN">
-          <span class="role-icon">&#128736;</span>
-          <div class="role-name">Admin</div>
-          <div class="role-desc">Manage platform</div>
-        </div>
+        <p>Sign in to access your dashboard.</p>
       </div>
 
       <div class="login-card glass-card reveal">
@@ -97,13 +74,7 @@
               <label for="reg-password">Password</label>
               <input type="password" id="reg-password" class="form-input" placeholder="Min. 6 characters" required autocomplete="new-password">
             </div>
-            <input type="hidden" id="reg-role" value="CITIZEN">
-            <div class="form-group" id="dept-group" style="display:none;">
-              <label for="reg-dept">Department</label>
-              <select id="reg-dept" class="form-input">
-                <option value="">Select department...</option>
-              </select>
-            </div>
+
             <button type="submit" class="btn btn-primary btn-submit">Create Account</button>
           </form>
           <div class="form-footer">

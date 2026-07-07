@@ -4,11 +4,29 @@ const User = require('../models/User');
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password } = req.body;
 
     const existing = await User.findOne({ email });
     if (existing) {
       return res.status(400).json({ error: 'Email already registered.' });
+    }
+
+    const domain = email.split('@')[1]?.toLowerCase();
+    let role;
+    if (domain === 'civic.com') {
+      role = 'CITIZEN';
+    } else if (domain === 'off.com') {
+      role = 'FIELD_OFFICER';
+    } else if (domain === 'head.com') {
+      role = 'DEPT_HEAD';
+    } else if (domain === 'admin.com') {
+      role = 'ADMIN';
+    } else {
+      return res.status(400).json({ error: 'Invalid email domain. Use @civic.com to register as citizen.' });
+    }
+
+    if (role !== 'CITIZEN') {
+      return res.status(403).json({ error: 'Only citizens can self-register. Contact admin for account creation.' });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -18,7 +36,7 @@ exports.register = async (req, res) => {
       name,
       email,
       passwordHash,
-      role: role || 'CITIZEN'
+      role
     });
 
     const token = jwt.sign(
@@ -37,6 +55,57 @@ exports.register = async (req, res) => {
         departmentId: user.departmentId
       }
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.createUser = async (req, res) => {
+  try {
+    const { name, email, password, role, departmentId } = req.body;
+
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ error: 'Name, email, password, and role are required.' });
+    }
+
+    const adminRoles = ['FIELD_OFFICER', 'DEPT_HEAD', 'ADMIN'];
+    if (!adminRoles.includes(role)) {
+      return res.status(400).json({ error: 'Admin can only create FIELD_OFFICER, DEPT_HEAD, or ADMIN accounts.' });
+    }
+
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ error: 'Email already registered.' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password, salt);
+
+    const userData = { name, email, passwordHash, role };
+    if ((role === 'FIELD_OFFICER' || role === 'DEPT_HEAD') && departmentId) {
+      userData.departmentId = departmentId;
+    }
+
+    const user = await User.create(userData);
+
+    res.status(201).json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        departmentId: user.departmentId
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.find().select('-passwordHash').populate('departmentId', 'name').sort({ createdAt: -1 });
+    res.json({ users });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

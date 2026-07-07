@@ -1,16 +1,11 @@
 const API = '/api/auth';
 
 const state = {
-  selectedRole: 'CITIZEN',
   isLogin: true
 };
 
 document.addEventListener('DOMContentLoaded', () => {
   checkAuth();
-
-  document.querySelectorAll('.role-card').forEach(card => {
-    card.addEventListener('click', () => selectRole(card.dataset.role));
-  });
 
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => switchTab(tab.dataset.tab));
@@ -19,8 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('login-form').addEventListener('submit', handleLogin);
   document.getElementById('register-form').addEventListener('submit', handleRegister);
   document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-
-  loadDepartments();
 });
 
 function checkAuth() {
@@ -31,22 +24,6 @@ function checkAuth() {
   }
 }
 
-function selectRole(role) {
-  state.selectedRole = role;
-  document.querySelectorAll('.role-card').forEach(c => {
-    c.classList.toggle('active', c.dataset.role === role);
-  });
-  document.getElementById('reg-role').value = role;
-  const deptGroup = document.getElementById('dept-group');
-  if (role === 'CITIZEN' || role === 'ADMIN') {
-    deptGroup.style.display = 'none';
-    document.getElementById('reg-dept').required = false;
-  } else {
-    deptGroup.style.display = 'block';
-    document.getElementById('reg-dept').required = true;
-  }
-}
-
 function switchTab(tab) {
   state.isLogin = tab === 'login';
   document.querySelectorAll('.tab').forEach(t => {
@@ -54,32 +31,6 @@ function switchTab(tab) {
   });
   document.getElementById('login-section').classList.toggle('active', tab === 'login');
   document.getElementById('register-section').classList.toggle('active', tab === 'register');
-}
-
-async function loadDepartments() {
-  try {
-    const res = await fetch('/api/departments', {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
-    });
-    if (!res.ok) throw new Error('Failed to load');
-    const data = await res.json();
-    const select = document.getElementById('reg-dept');
-    data.departments?.forEach(dept => {
-      const opt = document.createElement('option');
-      opt.value = dept._id;
-      opt.textContent = dept.name;
-      select.appendChild(opt);
-    });
-  } catch {
-    const select = document.getElementById('reg-dept');
-    const names = ['Sanitation Department', 'Roads Department', 'Municipality Department', 'Electricity Department', 'Traffic Police Department', 'Municipal Corporation', 'Parks & Horticulture Department'];
-    names.forEach(n => {
-      const opt = document.createElement('option');
-      opt.value = n;
-      opt.textContent = n;
-      select.appendChild(opt);
-    });
-  }
 }
 
 function showError(msg) {
@@ -125,8 +76,6 @@ async function handleRegister(e) {
   const name = document.getElementById('reg-name').value.trim();
   const email = document.getElementById('reg-email').value.trim();
   const password = document.getElementById('reg-password').value;
-  const role = state.selectedRole;
-  const departmentId = document.getElementById('reg-dept').value;
 
   if (!name || !email || !password) return showError('Please fill in all fields.');
   if (password.length < 6) return showError('Password must be at least 6 characters.');
@@ -136,10 +85,7 @@ async function handleRegister(e) {
   btn.textContent = 'Creating account...';
 
   try {
-    const body = { name, email, password, role };
-    if ((role === 'FIELD_OFFICER' || role === 'DEPT_HEAD') && departmentId) {
-      body.departmentId = departmentId;
-    }
+    const body = { name, email, password };
 
     const res = await fetch(`${API}/register`, {
       method: 'POST',

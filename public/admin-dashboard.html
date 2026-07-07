@@ -49,6 +49,31 @@
 
     .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
 
+    .page-section { display: none; }
+    .page-section.active { display: block; }
+
+    .user-form-card { padding: 1.5rem; margin-bottom: 1.5rem; }
+    .user-form-card .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .user-form-card .form-group { margin-bottom: 1rem; }
+    .user-form-card .form-group label { display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.35rem; font-weight: 500; }
+    .user-form-card .form-group input,
+    .user-form-card .form-group select { width: 100%; padding: 0.65rem 0.85rem; border-radius: 0.75rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-primary); font-family: var(--font-sans); font-size: 0.9rem; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
+    .user-form-card .form-group input:focus,
+    .user-form-card .form-group select:focus { border-color: var(--accent-blue); }
+    .user-form-card .form-group select option { background: var(--bg-secondary); color: var(--text-primary); }
+    .user-form-card .form-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 0.5rem; }
+
+    .role-badge { padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+    .role-badge.citizen { background: rgba(59,130,246,0.15); color: var(--accent-blue); }
+    .role-badge.officer { background: rgba(245,158,11,0.15); color: var(--accent-orange); }
+    .role-badge.head { background: rgba(139,92,246,0.15); color: var(--accent-purple); }
+    .role-badge.admin { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+
+    .alert-msg { padding: 0.75rem 1rem; border-radius: 0.75rem; font-size: 0.85rem; margin-bottom: 1rem; display: none; }
+    .alert-msg.show { display: block; }
+    .alert-msg.success { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: var(--accent-green); }
+    .alert-msg.error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: var(--accent-red); }
+
     @media (max-width: 768px) {
       .sidebar { width: 60px; padding: 1rem 0.5rem; }
       .sidebar-brand span, .sidebar-nav .nav-item span:not(.nav-icon), .user-info .user-name, .user-info .user-role { display: none; }
@@ -64,11 +89,11 @@
     <aside class="sidebar">
       <div class="sidebar-brand">&#127963; <span>CIVIC CARE</span></div>
       <nav class="sidebar-nav">
-        <a href="#" class="nav-item active"><span class="nav-icon">&#128202;</span> <span>Dashboard</span></a>
-        <a href="#" class="nav-item"><span class="nav-icon">&#128196;</span> <span>All Issues</span></a>
-        <a href="#" class="nav-item"><span class="nav-icon">&#128101;</span> <span>Users</span></a>
-        <a href="#" class="nav-item"><span class="nav-icon">&#127973;</span> <span>Departments</span></a>
-        <a href="#" class="nav-item"><span class="nav-icon">&#128200;</span> <span>Reports</span></a>
+        <a href="#" class="nav-item" data-page="dashboard"><span class="nav-icon">&#128202;</span> <span>Dashboard</span></a>
+        <a href="#" class="nav-item" data-page="dashboard"><span class="nav-icon">&#128196;</span> <span>All Issues</span></a>
+        <a href="#" class="nav-item" data-page="users"><span class="nav-icon">&#128101;</span> <span>Users</span></a>
+        <a href="#" class="nav-item" data-page="dashboard"><span class="nav-icon">&#127973;</span> <span>Departments</span></a>
+        <a href="#" class="nav-item" data-page="dashboard"><span class="nav-icon">&#128200;</span> <span>Reports</span></a>
       </nav>
       <div class="sidebar-footer">
         <div class="user-info">
@@ -114,28 +139,103 @@
         </div>
       </div>
 
-      <div class="section-header">
-        <h2>&#128196; Recent Complaints</h2>
+      <div id="page-dashboard" class="page-section active">
+        <div class="section-header">
+          <h2>&#128196; Recent Complaints</h2>
+        </div>
+
+        <div class="table-wrap glass-card" style="padding:0;overflow:hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Department</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="complaints-body">
+              <tr>
+                <td colspan="6" class="empty-state">Loading complaints data... <span style="display:inline-block;animation:spin 1s linear infinite;">&#8635;</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div class="table-wrap glass-card" style="padding:0;overflow:hidden;">
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Category</th>
-              <th>Priority</th>
-              <th>Status</th>
-              <th>Department</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody id="complaints-body">
-            <tr>
-              <td colspan="6" class="empty-state">Loading complaints data... <span style="display:inline-block;animation:spin 1s linear infinite;">&#8635;</span></td>
-            </tr>
-          </tbody>
-        </table>
+      <div id="page-users" class="page-section">
+        <div class="section-header">
+          <h2>&#128101; Manage Users</h2>
+        </div>
+
+        <div id="user-alert" class="alert-msg"></div>
+
+        <div class="user-form-card glass-card">
+          <h3 style="margin:0 0 1rem;font-size:1.1rem;font-weight:700;">Create New Account</h3>
+          <form id="create-user-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cu-name">Full Name</label>
+                <input type="text" id="cu-name" placeholder="John Doe" required>
+              </div>
+              <div class="form-group">
+                <label for="cu-email">Email</label>
+                <input type="email" id="cu-email" placeholder="user@example.com" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cu-password">Password</label>
+                <input type="password" id="cu-password" placeholder="Min. 6 characters" required>
+              </div>
+              <div class="form-group">
+                <label for="cu-role">Role</label>
+                <select id="cu-role" required>
+                  <option value="">Select role...</option>
+                  <option value="FIELD_OFFICER">Field Officer</option>
+                  <option value="DEPT_HEAD">Department Head</option>
+                  <option value="ADMIN">Admin</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row" id="cu-dept-row" style="display:none;">
+              <div class="form-group">
+                <label for="cu-dept">Department</label>
+                <select id="cu-dept">
+                  <option value="">Select department...</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="reset" class="btn btn-secondary" style="padding:0.6rem 1.2rem;">Reset</button>
+              <button type="submit" class="btn btn-primary" style="padding:0.6rem 1.2rem;">&#10133; Create Account</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="section-header" style="margin-top:2rem;">
+          <h3 style="font-size:1rem;font-weight:600;">All Users</h3>
+        </div>
+        <div class="table-wrap glass-card" style="padding:0;overflow:hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Department</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody id="users-body">
+              <tr>
+                <td colspan="5" class="empty-state">Loading users...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   </div>
@@ -148,8 +248,42 @@
       window.location.href = '/login.html';
     }
 
+    // Verify token is still valid with the server
+    (async function verifyToken() {
+      try {
+        const res = await fetch('/api/auth/me', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Token expired');
+      } catch {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login.html';
+      }
+    })();
+
     document.getElementById('admin-name').textContent = user.name || 'Administrator';
 
+    const style = document.createElement('style');
+    style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
+    document.head.appendChild(style);
+
+    // --- Nav switching ---
+    document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
+      item.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelectorAll('.sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+        document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+        const target = item.getAttribute('data-page') || 'dashboard';
+        document.getElementById(`page-${target}`)?.classList.add('active');
+      });
+    });
+
+    document.querySelector('.nav-item[data-page="dashboard"]')?.classList.add('active');
+    document.getElementById('page-dashboard')?.classList.add('active');
+
+    // --- Dashboard ---
     async function loadStats() {
       try {
         const res = await fetch('/api/complaints/stats', {
@@ -195,6 +329,120 @@
     loadStats();
     loadComplaints();
 
+    // --- User Management ---
+    const roleSelect = document.getElementById('cu-role');
+    const deptRow = document.getElementById('cu-dept-row');
+    const deptSelect = document.getElementById('cu-dept');
+    const userAlert = document.getElementById('user-alert');
+
+    roleSelect.addEventListener('change', () => {
+      const role = roleSelect.value;
+      deptRow.style.display = (role === 'FIELD_OFFICER' || role === 'DEPT_HEAD') ? 'block' : 'none';
+    });
+
+    async function loadDepartments() {
+      try {
+        const res = await fetch('/api/departments', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        deptSelect.innerHTML = '<option value="">Select department...</option>';
+        data.departments?.forEach(d => {
+          const opt = document.createElement('option');
+          opt.value = d._id;
+          opt.textContent = d.name;
+          deptSelect.appendChild(opt);
+        });
+      } catch {
+        deptSelect.innerHTML = '<option value="">Departments unavailable</option>';
+      }
+    }
+
+    function showUserAlert(msg, type) {
+      userAlert.textContent = msg;
+      userAlert.className = `alert-msg ${type} show`;
+      setTimeout(() => userAlert.classList.remove('show'), 5000);
+    }
+
+    document.getElementById('create-user-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = document.getElementById('cu-name').value.trim();
+      const email = document.getElementById('cu-email').value.trim();
+      const password = document.getElementById('cu-password').value;
+      const role = roleSelect.value;
+      const departmentId = deptSelect.value;
+
+      if (!name || !email || !password || !role) {
+        return showUserAlert('Please fill in all required fields.', 'error');
+      }
+      if (password.length < 6) {
+        return showUserAlert('Password must be at least 6 characters.', 'error');
+      }
+
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+
+      try {
+        const body = { name, email, password, role };
+        if ((role === 'FIELD_OFFICER' || role === 'DEPT_HEAD') && departmentId) {
+          body.departmentId = departmentId;
+        }
+
+        const res = await fetch('/api/auth/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to create user');
+
+        showUserAlert(`Account created successfully for ${name} (${role.replace(/_/g, ' ').toLowerCase()}).`, 'success');
+        e.target.reset();
+        deptRow.style.display = 'none';
+        loadUsers();
+      } catch (err) {
+        showUserAlert(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+      }
+    });
+
+    async function loadUsers() {
+      try {
+        const res = await fetch('/api/auth/users', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const tbody = document.getElementById('users-body');
+        if (!data.users?.length) {
+          tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No users found.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data.users.map(u => {
+          const roleClass = u.role === 'CITIZEN' ? 'citizen' : u.role === 'FIELD_OFFICER' ? 'officer' : u.role === 'DEPT_HEAD' ? 'head' : 'admin';
+          const roleLabel = u.role === 'FIELD_OFFICER' ? 'Field Officer' : u.role === 'DEPT_HEAD' ? 'Dept. Head' : u.role.charAt(0) + u.role.slice(1).toLowerCase();
+          return `<tr>
+            <td><strong>${u.name}</strong></td>
+            <td style="font-size:0.85rem;color:var(--text-secondary);">${u.email}</td>
+            <td><span class="role-badge ${roleClass}">${roleLabel}</span></td>
+            <td style="font-size:0.85rem;color:var(--text-secondary);">${u.departmentId?.name || '--'}</td>
+            <td style="font-size:0.8rem;color:var(--text-muted);">${new Date(u.createdAt).toLocaleDateString()}</td>
+          </tr>`;
+        }).join('');
+      } catch {
+        const tbody = document.getElementById('users-body');
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Could not load users.</td></tr>';
+      }
+    }
+
+    loadDepartments();
+    loadUsers();
+
+    // --- Logout & Theme ---
     document.getElementById('logout-btn').addEventListener('click', () => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
@@ -205,10 +453,6 @@
       const html = document.documentElement;
       html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
     });
-
-    const style = document.createElement('style');
-    style.textContent = `@keyframes spin { to { transform: rotate(360deg); } }`;
-    document.head.appendChild(style);
   </script>
 </body>
 </html>
