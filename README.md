@@ -1,302 +1,276 @@
-# 🚀 Civic Care
-### Empowering Citizens. Improving Communities.
+<div align="center">
 
-Civic Care is a modern web platform that bridges the gap between citizens and local authorities by providing an easy, transparent, and efficient way to report, monitor, and resolve civic issues.
+# 🌍 Civic Care
 
-The platform enables users to submit complaints with images and location details, track issue progress in real time, and promote accountability through a centralized management system.
+### **Smart Civic Issue Reporting & Community Engagement Platform**
 
----
+<img src="assets/banner.png" width="100%" alt="Civic Care Banner"/>
 
-## 🌟 Why Civic Care?
+<br>
 
-Every day, people encounter problems such as:
+![HTML](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![NodeJS](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 
-- 🛣️ Potholes
-- 💡 Broken street lights
-- 🚮 Garbage accumulation
-- 🚰 Water leakage
-- 🌳 Fallen trees
-- 🚦 Traffic signal failures
+<br>
 
-Traditional complaint systems are often slow, difficult to access, and lack transparency.
+### 🚀 Empowering Citizens • Connecting Communities • Building Smarter Cities
 
-**Civic Care solves these challenges by digitizing the complete complaint lifecycle.**
-
----
-
-# ✨ Key Features
-
-## 👤 Citizen Portal
-
-- Secure User Registration & Login
-- Report civic issues instantly
-- Upload issue photos
-- GPS/Location support
-- Complaint categorization
-- Real-time complaint tracking
-- View complaint history
-- Receive status updates
+</div>
 
 ---
 
-## 🛠️ Admin Dashboard
+# ✨ Overview
 
-- Centralized complaint management
-- View all reported issues
-- Assign complaints
-- Update complaint status
-- Priority-based issue handling
-- Analytics dashboard
-- User management
+Civic Care is an intelligent web platform that enables citizens to report civic issues directly to authorities with complete transparency.
+
+From reporting potholes and garbage dumps to tracking complaint resolution in real time, Civic Care creates a seamless digital bridge between citizens and government.
 
 ---
 
-## 📍 Smart Complaint System
+# 🎯 Problem Statement
 
-- Image-based issue reporting
-- Location tagging
-- Time-stamped submissions
-- Unique Complaint IDs
-- Complaint filtering
-- Search functionality
+Traditional complaint systems suffer from:
 
----
+❌ Manual paperwork
 
-## 📊 Transparency
+❌ Slow response time
 
-- Track complaint progress
-- Pending/Resolved statistics
-- Resolution history
-- Faster communication between citizens and authorities
+❌ No transparency
+
+❌ No complaint tracking
+
+❌ Poor communication
 
 ---
 
-# 💡 Project Highlights
+# 💡 Our Solution
 
-✔ Digital Civic Issue Reporting
+✔ Digital Complaint Registration
 
-✔ Transparent Complaint Tracking
+✔ Real-Time Status Tracking
 
-✔ User-Friendly Interface
+✔ Location-Based Reporting
 
-✔ Responsive Design
+✔ Image Upload Support
 
-✔ Secure Authentication
+✔ Admin Dashboard
 
-✔ Efficient Administrative Workflow
+✔ Complaint Analytics
 
-✔ Better Community Engagement
+✔ Faster Resolution
 
 ---
 
-# 🖥️ Technology Stack
+# 🚀 Features
 
-## Frontend
+| 👤 Citizen | 🛠 Admin |
+|------------|----------|
+| Register/Login | Dashboard |
+| Report Issues | View Complaints |
+| Upload Images | Update Status |
+| GPS Location | Manage Users |
+| Track Complaints | Analytics |
+| Complaint History | Priority Handling |
 
-- HTML5
-- CSS3
-- JavaScript
+---
 
-## Backend
+# 🌟 Core Features
 
-- Node.js
-- Express.js
+### 📍 Smart Complaint Reporting
 
-## Database
+- Image Upload
+- GPS Location
+- Complaint Category
+- Description
+- Timestamp
 
-- MongoDB
+---
 
-## Other Tools
+### 📊 Real-Time Tracking
 
-- Git
-- GitHub
-- REST APIs
+```text
+Pending
+   │
+   ▼
+Under Review
+   │
+   ▼
+Assigned
+   │
+   ▼
+Resolved
+```
+
+---
+
+### 🔒 Secure Authentication
+
+- User Login
+- Registration
+- Protected Routes
+- Session Management
+
+---
+
+### 📈 Analytics Dashboard
+
+- Total Complaints
+- Pending Issues
+- Resolved Issues
+- Monthly Statistics
+- Category Distribution
+
+---
+
+# 🖥 Tech Stack
+
+| Frontend | Backend | Database |
+|----------|----------|----------|
+| HTML | Node.js | MongoDB |
+| CSS | Express.js | Mongoose |
+| JavaScript | REST API | Atlas |
 
 ---
 
 # 📂 Project Structure
 
-```
-civic-care/
+```text
+Civic-Care
 │
-├── frontend/
+├── frontend
 │
-├── backend/
+├── backend
 │
-├── database/
+├── routes
 │
-├── routes/
+├── controllers
 │
-├── controllers/
+├── models
 │
-├── models/
+├── middleware
 │
-├── public/
+├── public
 │
-├── assets/
+├── uploads
+│
+├── assets
 │
 └── README.md
 ```
 
 ---
 
-# ⚙️ Installation
+# 🔄 Workflow
 
-Clone the repository
+```mermaid
+graph TD
 
-```bash
-git clone https://github.com/dharunram-lgtm/civic-care.git
-```
+A[Citizen Login]
 
-Go to project directory
+A --> B[Submit Complaint]
 
-```bash
-cd civic-care
-```
+B --> C[Upload Image]
 
-Install dependencies
+C --> D[Add Location]
 
-```bash
-npm install
-```
+D --> E[Database]
 
-Start the server
+E --> F[Admin Dashboard]
 
-```bash
-npm start
+F --> G[Review]
+
+G --> H[Update Status]
+
+H --> I[Citizen Notification]
 ```
 
 ---
 
 # 📸 Screenshots
 
-> Add screenshots here
+| Home | Dashboard |
+|-------|-----------|
+| ![](assets/home.png) | ![](assets/dashboard.png) |
 
-```
-Home Page
+| Report Issue | Complaint Tracking |
+|--------------|-------------------|
+| ![](assets/report.png) | ![](assets/track.png) |
 
-Login Page
+---
 
-Citizen Dashboard
+# ⚙ Installation
 
-Complaint Form
+```bash
+git clone https://github.com/dharunram-lgtm/civic-care.git
 
-Admin Dashboard
+cd civic-care
 
-Complaint Tracking
+npm install
+
+npm start
 ```
 
 ---
 
-# 🔄 Workflow
+# 🎯 Future Scope
 
-```
-Citizen
-   │
-   ▼
-Register/Login
-   │
-   ▼
-Submit Complaint
-   │
-   ▼
-Upload Image + Location
-   │
-   ▼
-Database
-   │
-   ▼
-Admin Dashboard
-   │
-   ▼
-Review Complaint
-   │
-   ▼
-Assign & Update Status
-   │
-   ▼
-Citizen Receives Update
-```
+- 🤖 AI Complaint Classification
 
----
+- 📱 Progressive Web App
 
-# 🎯 Project Objectives
-
-- Simplify civic complaint registration.
-- Increase transparency in issue resolution.
-- Improve communication between citizens and local authorities.
-- Reduce manual paperwork.
-- Enable faster response to public issues.
-- Build smarter and cleaner cities through technology.
-
----
-
-# 🌍 Future Enhancements
-
-- 🤖 AI-based complaint classification
-- 📱 Progressive Web App (PWA)
 - 🔔 Push Notifications
-- 📍 Live GIS Maps
-- 📈 Predictive Analytics
+
+- 📍 Interactive GIS Maps
+
 - 🌐 Multi-language Support
-- 📞 Emergency SOS Integration
-- 🤝 Government API Integration
-- 📊 AI-powered Issue Prioritization
+
+- ☁ Cloud Deployment
+
+- 📊 Predictive Analytics
+
+- 🧠 AI-based Priority Detection
 
 ---
 
-# 🤝 Contributing
+# 📊 Project Statistics
 
-Contributions are welcome!
-
-1. Fork the repository
-2. Create your feature branch
-
-```bash
-git checkout -b feature/NewFeature
-```
-
-3. Commit your changes
-
-```bash
-git commit -m "Added new feature"
-```
-
-4. Push
-
-```bash
-git push origin feature/NewFeature
-```
-
-5. Open a Pull Request
+| Feature | Status |
+|----------|--------|
+| Responsive UI | ✅ |
+| Authentication | ✅ |
+| Complaint Tracking | ✅ |
+| Admin Panel | ✅ |
+| MongoDB Integration | ✅ |
+| REST API | ✅ |
 
 ---
 
-# 📄 License
+# ❤️ Why Civic Care?
 
-This project is licensed under the MIT License.
+> Civic Care is more than a complaint portal.
 
----
-
-# 👨‍💻 Developer
-
-**Dharun Ram**
-
-GitHub:
-https://github.com/dharunram-lgtm
+It encourages active citizen participation, promotes transparency, improves accountability, and helps create smarter, cleaner, and more responsive communities.
 
 ---
 
-# ⭐ Support
+# 👨‍💻 Author
 
-If you like this project,
+## Dharun Ram
 
-⭐ Star this repository
+⭐ If you found this project useful, please consider giving it a **Star**.
 
-🍴 Fork it
-
-💬 Share your feedback
+🍴 Fork • ⭐ Star • 🛠 Contribute
 
 ---
 
-## "Building Smarter Cities Through Technology."
+<div align="center">
+
+## 🌍 Together, Let's Build Smarter Cities
+
+Made with ❤️ by **Dharun Ram**
+
+</div>
