@@ -1,23 +1,27 @@
 <div align="center">
 
-# 🌍 Civic Care
+<img src="assets/logo.png" width="120"/>
 
-### **Smart Civic Issue Reporting & Community Engagement Platform**
+# Civic Care
 
-<img src="assets/banner.png" width="100%" alt="Civic Care Banner"/>
+### 🚀 AI-Powered Smart Civic Issue Management Platform
 
-<br>
-
-![HTML](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![NodeJS](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+<p align="center">
+A next-generation civic complaint platform that uses AI to classify, prioritize,
+and route public issues to the right government department within seconds.
+</p>
 
 <br>
 
-### 🚀 Empowering Citizens • Connecting Communities • Building Smarter Cities
+<img src="https://img.shields.io/badge/AI-Powered-blue?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Node.js-Backend-success?style=for-the-badge&logo=node.js"/>
+<img src="https://img.shields.io/badge/MongoDB-Database-green?style=for-the-badge&logo=mongodb"/>
+<img src="https://img.shields.io/badge/Express.js-API-black?style=for-the-badge&logo=express"/>
+<img src="https://img.shields.io/badge/Responsive-UI-purple?style=for-the-badge"/>
+
+<br><br>
+
+> **"Building smarter cities with AI, automation and transparency."**
 
 </div>
 
@@ -25,184 +29,277 @@
 
 # ✨ Overview
 
-Civic Care is an intelligent web platform that enables citizens to report civic issues directly to authorities with complete transparency.
+Civic Care transforms the traditional complaint management system into an **AI-powered digital ecosystem** where citizens, field officers, department heads, and administrators collaborate through one intelligent platform.
 
-From reporting potholes and garbage dumps to tracking complaint resolution in real time, Civic Care creates a seamless digital bridge between citizens and government.
-
----
-
-# 🎯 Problem Statement
-
-Traditional complaint systems suffer from:
-
-❌ Manual paperwork
-
-❌ Slow response time
-
-❌ No transparency
-
-❌ No complaint tracking
-
-❌ Poor communication
+Instead of waiting days for complaints to reach the correct department, Civic Care automatically analyzes, categorizes, prioritizes, and routes issues within seconds.
 
 ---
 
-# 💡 Our Solution
+# 🎥 Project Preview
 
-✔ Digital Complaint Registration
+## 🌍 Landing Page
 
-✔ Real-Time Status Tracking
+<p align="center">
 
-✔ Location-Based Reporting
+<img src="assets/home.png" width="95%"/>
 
-✔ Image Upload Support
-
-✔ Admin Dashboard
-
-✔ Complaint Analytics
-
-✔ Faster Resolution
+</p>
 
 ---
 
-# 🚀 Features
+## 🔐 Multi Role Authentication
 
-| 👤 Citizen | 🛠 Admin |
-|------------|----------|
-| Register/Login | Dashboard |
-| Report Issues | View Complaints |
-| Upload Images | Update Status |
-| GPS Location | Manage Users |
-| Track Complaints | Analytics |
-| Complaint History | Priority Handling |
+<p align="center">
 
----
+<img src="assets/login.png" width="90%"/>
 
-# 🌟 Core Features
+</p>
 
-### 📍 Smart Complaint Reporting
+Supports
 
-- Image Upload
-- GPS Location
-- Complaint Category
-- Description
-- Timestamp
+✅ Citizen
+
+✅ Field Officer
+
+✅ Department Head
+
+✅ Administrator
 
 ---
 
-### 📊 Real-Time Tracking
+## 📊 Citizen Dashboard
+
+<p align="center">
+
+<img src="assets/dashboard.png" width="95%"/>
+
+</p>
+
+Users can
+
+- Track Complaints
+- Submit New Reports
+- Monitor Progress
+- View Complaint Analytics
+
+---
+
+# ⚡ Why Civic Care?
+
+Traditional systems are
+
+❌ Slow
+
+❌ Manual
+
+❌ Paper Based
+
+❌ Difficult to Track
+
+❌ Poorly Organized
+
+---
+
+Civic Care introduces
+
+✅ AI Classification
+
+✅ Smart Routing
+
+✅ Geo-tagged Complaints
+
+✅ Real-time Tracking
+
+✅ Department Workflow
+
+✅ Role Based Access
+
+---
+
+# 🧠 AI Features
+
+🧠 Complaint Classification
+
+📍 Automatic Department Detection
+
+⚡ Priority Prediction
+
+📂 Intelligent Routing
+
+📈 Real-time Monitoring
+
+🔄 Status Tracking
+
+---
+
+# 🏛 System Architecture
 
 ```text
-Pending
-   │
-   ▼
-Under Review
-   │
-   ▼
-Assigned
-   │
-   ▼
-Resolved
+Citizen
+    │
+    ▼
+Complaint Submission
+    │
+    ▼
+AI Processing Engine
+    │
+ ┌──┼───────────────┐
+ │  │               │
+ ▼  ▼               ▼
+
+Priority      Category      Location
+
+      │
+      ▼
+
+Department Allocation
+
+      │
+      ▼
+
+Field Officer
+
+      │
+      ▼
+
+Department Head
+
+      │
+      ▼
+
+Administrator
+
+      │
+      ▼
+
+Citizen Notification
 ```
 
 ---
 
-### 🔒 Secure Authentication
+# 🔥 Core Features
 
-- User Login
-- Registration
-- Protected Routes
-- Session Management
-
----
-
-### 📈 Analytics Dashboard
-
-- Total Complaints
-- Pending Issues
-- Resolved Issues
-- Monthly Statistics
-- Category Distribution
+| Feature | Description |
+|----------|-------------|
+| 🤖 AI Complaint Analysis | Automatically classifies complaints |
+| 📍 Geo Location | GPS enabled reporting |
+| 📸 Image Upload | Upload issue evidence |
+| ⚡ Smart Routing | Sends issue to correct department |
+| 👥 Multi User Roles | Citizen, Officer, Head, Admin |
+| 📊 Dashboard | Live complaint statistics |
+| 🔔 Notifications | Complaint status updates |
+| 📈 Analytics | Department performance |
 
 ---
 
-# 🖥 Tech Stack
+# 🛠 Technology Stack
 
-| Frontend | Backend | Database |
-|----------|----------|----------|
-| HTML | Node.js | MongoDB |
-| CSS | Express.js | Mongoose |
-| JavaScript | REST API | Atlas |
+<table>
+
+<tr>
+
+<td align="center">
+
+### Frontend
+
+HTML5
+
+CSS3
+
+JavaScript
+
+</td>
+
+<td align="center">
+
+### Backend
+
+Node.js
+
+Express.js
+
+REST API
+
+</td>
+
+<td align="center">
+
+### Database
+
+MongoDB
+
+Mongoose
+
+</td>
+
+</tr>
+
+</table>
 
 ---
 
-# 📂 Project Structure
+# 📁 Folder Structure
 
 ```text
-Civic-Care
-│
-├── frontend
-│
-├── backend
-│
-├── routes
-│
-├── controllers
-│
-├── models
-│
-├── middleware
-│
-├── public
-│
-├── uploads
-│
-├── assets
-│
+CIVIC CARE
+
+├── Frontend
+├── Backend
+├── Controllers
+├── Routes
+├── Models
+├── Middleware
+├── Database
+├── Assets
 └── README.md
 ```
 
 ---
 
-# 🔄 Workflow
+# 📈 Workflow
 
 ```mermaid
-graph TD
 
-A[Citizen Login]
+graph LR
 
-A --> B[Submit Complaint]
+Citizen-->Complaint
 
-B --> C[Upload Image]
+Complaint-->AI
 
-C --> D[Add Location]
+AI-->Category
 
-D --> E[Database]
+Category-->Department
 
-E --> F[Admin Dashboard]
+Department-->Officer
 
-F --> G[Review]
+Officer-->Head
 
-G --> H[Update Status]
+Head-->Admin
 
-H --> I[Citizen Notification]
+Admin-->Resolved
+
+Resolved-->Citizen
 ```
 
 ---
 
-# 📸 Screenshots
+# 📊 Dashboard Features
 
-| Home | Dashboard |
-|-------|-----------|
-| ![](assets/home.png) | ![](assets/dashboard.png) |
+✅ Complaint Timeline
 
-| Report Issue | Complaint Tracking |
-|--------------|-------------------|
-| ![](assets/report.png) | ![](assets/track.png) |
+✅ Status Analytics
+
+✅ Issue Prioritization
+
+✅ Department Allocation
+
+✅ Complaint History
+
+✅ Performance Monitoring
 
 ---
 
-# ⚙ Installation
+# 🚀 Installation
 
 ```bash
 git clone https://github.com/dharunram-lgtm/civic-care.git
@@ -216,61 +313,61 @@ npm start
 
 ---
 
-# 🎯 Future Scope
+# 🌎 Future Roadmap
 
-- 🤖 AI Complaint Classification
-
-- 📱 Progressive Web App
-
+- 🤖 Deep Learning Classification
+- 🌍 GIS Map Integration
+- 📱 Mobile Application
 - 🔔 Push Notifications
-
-- 📍 Interactive GIS Maps
-
-- 🌐 Multi-language Support
-
+- 📡 Live Officer Tracking
+- 🛰 Satellite Location Detection
+- 📈 Predictive Analytics
 - ☁ Cloud Deployment
-
-- 📊 Predictive Analytics
-
-- 🧠 AI-based Priority Detection
+- 🧠 Generative AI Assistant
 
 ---
 
-# 📊 Project Statistics
+# 💎 Project Highlights
 
-| Feature | Status |
-|----------|--------|
-| Responsive UI | ✅ |
-| Authentication | ✅ |
-| Complaint Tracking | ✅ |
-| Admin Panel | ✅ |
-| MongoDB Integration | ✅ |
-| REST API | ✅ |
+```
+⚡ AI Powered
+
+📍 Geo Tagged Complaints
+
+🛠 Smart Department Routing
+
+🔒 Secure Authentication
+
+📊 Analytics Dashboard
+
+🌙 Dark Modern UI
+
+⚙ Responsive Design
+
+🚀 High Performance
+
+📱 Mobile Friendly
+
+```
 
 ---
 
-# ❤️ Why Civic Care?
-
-> Civic Care is more than a complaint portal.
-
-It encourages active citizen participation, promotes transparency, improves accountability, and helps create smarter, cleaner, and more responsive communities.
-
----
-
-# 👨‍💻 Author
+# 👨‍💻 Developed By
 
 ## Dharun Ram
 
-⭐ If you found this project useful, please consider giving it a **Star**.
+GitHub
 
-🍴 Fork • ⭐ Star • 🛠 Contribute
+https://github.com/dharunram-lgtm
 
 ---
 
 <div align="center">
 
-## 🌍 Together, Let's Build Smarter Cities
+# ⭐ If you like this project,
 
-Made with ❤️ by **Dharun Ram**
+Give it a ⭐ on GitHub!
+
+Made with ❤️ using Node.js • MongoDB • Express • JavaScript
 
 </div>
