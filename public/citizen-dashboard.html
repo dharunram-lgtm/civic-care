@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CIVIC CARE — My Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/surfaces.css">
+  <link rel="stylesheet" href="/css/citizen-dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">&#127963;</span>
+        <span class="brand-text">CIVIC CARE</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-page="dashboard">
+          <span class="nav-icon">&#128202;</span>
+          <span>My Complaints</span>
+        </button>
+        <button class="nav-item" data-page="report" onclick="location.href='/citizen-report.html'">
+          <span class="nav-icon">&#128221;</span>
+          <span>Report New Issue</span>
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar">&#128100;</div>
+          <div>
+            <div class="user-name" id="user-name">Citizen</div>
+            <div class="user-role" id="user-role">CITIZEN</div>
+          </div>
+        </div>
+        <a href="/" class="btn btn-secondary" style="width:100%;padding:0.5rem;font-size:0.85rem;">&#8592; Home</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <h1 class="page-title">My Dashboard</h1>
+        </div>
+        <div class="top-bar-right">
+          <button id="theme-toggle" class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem;">&#127769;</button>
+          <button id="refresh-btn" class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem;">&#8635;</button>
+          <a href="/citizen-report.html" class="btn btn-primary" style="padding:0.5rem 1rem;font-size:0.85rem;">&#128221; New Report</a>
+        </div>
+      </header>
+
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon blue">&#128200;</div>
+          <div class="stat-card-info">
+            <span class="stat-card-value" id="stat-total">0</span>
+            <span class="stat-card-label">Total Complaints</span>
+          </div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon orange">&#128197;</div>
+          <div class="stat-card-info">
+            <span class="stat-card-value" id="stat-pending">0</span>
+            <span class="stat-card-label">In Progress</span>
+          </div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon green">&#9989;</div>
+          <div class="stat-card-info">
+            <span class="stat-card-value" id="stat-resolved">0</span>
+            <span class="stat-card-label">Resolved</span>
+          </div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon red">&#128308;</div>
+          <div class="stat-card-info">
+            <span class="stat-card-value" id="stat-critical">0</span>
+            <span class="stat-card-label">Critical</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="complaints-header">
+        <h2>&#128196; Your Complaints</h2>
+      </div>
+
+      <div class="complaints-list" id="complaints-list">
+        <div class="empty-state glass-card">
+          <div class="empty-icon">&#128203;</div>
+          <p>No complaints yet.</p>
+          <p style="font-size:0.85rem;margin-top:0.5rem;">Report an issue to get started.</p>
+          <a href="/citizen-report.html" class="btn btn-primary" style="margin-top:1rem;">&#128221; Report an Issue</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="profile-modal" class="profile-modal-overlay" hidden>
+    <div class="profile-modal glass-card">
+      <button id="profile-close" class="profile-close">&times;</button>
+      <div class="profile-modal-header">
+        <div class="profile-modal-avatar">&#128100;</div>
+        <div class="profile-modal-name" id="profile-name">Citizen</div>
+        <div class="profile-modal-role" id="profile-role">CITIZEN</div>
+      </div>
+      <div class="profile-modal-body">
+        <div class="profile-field">
+          <label>Name</label>
+          <input type="text" id="profile-input-name" class="profile-input" placeholder="Your name">
+        </div>
+        <div class="profile-field">
+          <label>Email</label>
+          <input type="email" id="profile-input-email" class="profile-input" placeholder="Your email">
+        </div>
+      </div>
+      <div class="profile-modal-actions">
+        <button id="profile-save" class="btn btn-primary" style="flex:1;">Save Changes</button>
+        <button id="profile-logout" class="btn btn-critical" style="flex:1;">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const _user = JSON.parse(localStorage.getItem('user') || '{}');
+    const _token = localStorage.getItem('token');
+    if (!_token) { window.location.href = '/login.html'; }
+    if (_user.name) { document.getElementById('user-name').textContent = _user.name; }
+  </script>
+  <script src="/js/citizen-dashboard.js"></script>
+</body>
+</html>

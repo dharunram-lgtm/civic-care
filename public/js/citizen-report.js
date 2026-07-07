@@ -15,18 +15,15 @@
   const submitBtn = document.getElementById('submit-btn');
   const description = document.getElementById('description');
   const charCount = document.getElementById('char-count');
-  const terminalOverlay = document.getElementById('terminal-overlay');
-  const terminalBody = document.getElementById('terminal-body');
-  const resultOverlay = document.getElementById('result-overlay');
-
   const themeToggle = document.getElementById('theme-toggle');
 
   function getAuthToken() {
-    return localStorage.getItem('civic_care_token');
+    return localStorage.getItem('token');
   }
 
   function getUserId() {
-    return localStorage.getItem('civic_care_user_id');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    return user.id;
   }
 
   themeToggle.addEventListener('click', () => {
@@ -210,116 +207,40 @@
     submitBtn.disabled = true;
     submitBtn.textContent = '\u23F3 Processing...';
 
-    terminalBody.innerHTML = '<div class="terminal-line system">[SYSTEM] Initializing CIVIC CARE AI Pipeline...</div>';
-    terminalOverlay.hidden = false;
+    const formData = new FormData();
+    if (imageFile) formData.append('image', imageFile);
+    formData.append('description', description.value);
+    formData.append('latitude', latitude);
+    formData.append('longitude', longitude);
 
-    const lines = [
-      { text: '[+] Uploading image to secure vault...', cls: 'info', delay: 400 },
-      { text: '[+] AI analyzing image (YOLOv8)...', cls: 'info', delay: 800 },
-      { text: `[+] AI analyzing image (YOLOv8)... [Confidence: ${Math.floor(85 + Math.random() * 14)}% - ${['Pothole','Garbage','Water Leakage','Streetlight','Traffic Signal'][Math.floor(Math.random()*5)]}]`, cls: 'success', delay: 1400 },
-      { text: '[+] NLP extracting context from description...', cls: 'info', delay: 2000 },
-      { text: '[+] Scanning for duplicates in 50m radius...', cls: 'info', delay: 2600 },
-      { text: '[+] Running priority calculation...', cls: 'info', delay: 3200 },
-    ];
+    const token = getAuthToken();
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    for (const line of lines) {
-      await new Promise(r => setTimeout(r, line.delay));
-      const div = document.createElement('div');
-      div.className = `terminal-line ${line.cls}`;
-      div.textContent = line.text;
-      terminalBody.appendChild(div);
-      terminalBody.scrollTop = terminalBody.scrollHeight;
+    let response;
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      response = await fetch('/api/complaints', {
+        method: 'POST',
+        headers: token ? headers : undefined,
+        body: token ? formData : undefined,
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+    } catch (e) {
+      response = null;
     }
 
-    try {
-      const formData = new FormData();
-      if (imageFile) formData.append('image', imageFile);
-      formData.append('description', description.value);
-      formData.append('latitude', latitude);
-      formData.append('longitude', longitude);
-
-      const token = getAuthToken();
-      const headers = {};
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-
-      let response;
-      try {
-        response = await fetch('/api/complaints', {
-          method: 'POST',
-          headers: token ? headers : undefined,
-          body: token ? formData : undefined
-        });
-      } catch (e) {
-        response = null;
-      }
-
-      terminalOverlay.hidden = true;
-
-      if (response && response.ok) {
-        const data = await response.json();
-        showResult(data);
-      } else {
-        showMockResult();
-      }
-    } catch (err) {
-      terminalOverlay.hidden = true;
-      showMockResult();
+    if (response && response.ok) {
+      window.location.href = '/citizen-dashboard.html';
+      return;
     }
 
     isSubmitting = false;
     submitBtn.disabled = false;
-    submitBtn.textContent = '\u26A1 Submit to AI Engine';
-  });
-
-  function showMockResult() {
-    const mockResult = {
-      complaint: { _id: 'mock_' + Math.random().toString(36).substr(2, 9) },
-      aiResult: {
-        category: ['Pothole', 'Garbage', 'Water Leakage', 'Streetlight', 'Traffic Signal'][Math.floor(Math.random() * 5)],
-        confidence: Math.floor(85 + Math.random() * 14),
-        priority: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'][Math.floor(Math.random() * 4)],
-        department: 'Roads Department'
-      },
-      isDuplicate: Math.random() < 0.15,
-      ticketId: '#' + Math.random().toString(36).substr(2, 6).toUpperCase()
-    };
-    showResult(mockResult);
-  }
-
-  function showResult(data) {
-    const isDuplicate = data.isDuplicate;
-    const ai = data.aiResult || { category: 'Unknown', confidence: 90, priority: 'MEDIUM', department: 'Roads Department' };
-    const ticketId = data.ticketId || ('#' + Math.random().toString(36).substr(2, 6).toUpperCase());
-
-    document.getElementById('result-success').hidden = isDuplicate;
-    document.getElementById('result-duplicate').hidden = !isDuplicate;
-    document.getElementById('result-error').hidden = true;
-
-    const details = document.getElementById(isDuplicate ? 'duplicate-details' : 'result-details');
-    details.innerHTML = `
-      <div class="detail-row"><span>Ticket ID</span><span style="font-weight:700;color:var(--accent-cyan);">${ticketId}</span></div>
-      <div class="detail-row"><span>Category</span><span>${ai.category}</span></div>
-      <div class="detail-row"><span>AI Confidence</span><span>${ai.confidence}%</span></div>
-      <div class="detail-row"><span>Priority</span><span style="color:${ai.priority === 'CRITICAL' ? 'var(--accent-red)' : ai.priority === 'HIGH' ? 'var(--accent-orange)' : ai.priority === 'MEDIUM' ? 'var(--accent-yellow)' : 'var(--accent-green)'}">${ai.priority}</span></div>
-      <div class="detail-row"><span>Routed To</span><span>${ai.department || 'Assigned Department'}</span></div>
-    `;
-
-    resultOverlay.hidden = false;
-  }
-
-  document.getElementById('report-another').addEventListener('click', () => {
-    resultOverlay.hidden = true;
-    imageFile = null;
-    imageDataUrl = null;
-    preview.src = '';
-    preview.hidden = true;
-    dropZone.classList.remove('has-image');
-    removeBtn.style.display = 'none';
-    fileInput.value = '';
-    description.value = '';
-    charCount.textContent = '0';
-    document.querySelector('.drop-zone-content p strong').textContent = 'Drop your image here';
-    goToStep(1);
+    submitBtn.textContent = response ? '\u26A0\uFE0F Server error - try again' : '\u26A0\uFE0F Could not reach server';
+    setTimeout(() => { submitBtn.textContent = '\u26A1 Submit to AI Engine'; }, 3000);
   });
 
   goToStep(1);

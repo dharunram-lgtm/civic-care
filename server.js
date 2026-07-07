@@ -21,7 +21,14 @@ app.use('/api/complaints', complaintRoutes);
 app.use('/api/departments', departmentRoutes);
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', service: 'CIVIC CARE API', version: '1.0.0' });
+  const dbState = mongoose.connection.readyState;
+  const states = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
+  res.json({
+    status: dbState === 1 ? 'ok' : 'degraded',
+    service: 'CIVIC CARE API',
+    version: '1.0.0',
+    database: states[dbState] || 'unknown'
+  });
 });
 
 app.get('*', (req, res) => {
@@ -30,10 +37,20 @@ app.get('*', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/civic-care';
+const USE_MEMORY_DB = process.env.USE_MEMORY_DB === 'true' || !process.env.MONGODB_URI;
 
-mongoose.connect(MONGODB_URI)
-  .then(async () => {
-    console.log('[+] MongoDB connected successfully');
+async function start() {
+  try {
+    if (USE_MEMORY_DB) {
+      const { MongoMemoryServer } = require('mongodb-memory-server');
+      const mongod = await MongoMemoryServer.create();
+      const uri = mongod.getUri();
+      await mongoose.connect(uri);
+      console.log('[+] In-memory MongoDB started');
+    } else {
+      await mongoose.connect(MONGODB_URI);
+      console.log('[+] MongoDB connected successfully');
+    }
 
     const Department = require('./models/Department');
     const deptCount = await Department.countDocuments();
@@ -53,11 +70,18 @@ mongoose.connect(MONGODB_URI)
     app.listen(PORT, () => {
       console.log(`[+] CIVIC CARE server running on http://localhost:${PORT}`);
     });
-  })
-  .catch(err => {
-    console.error('[-] MongoDB connection error:', err.message);
-    console.log('[!] Starting server without database - static files only');
+  } catch (err) {
+    console.error('[-] Failed to start database:', err.message);
+    console.log('[!] Starting server without database - API routes will return errors');
+
+    app.use('/api', (req, res) => {
+      res.status(503).json({ error: 'Database not available. Start MongoDB or set USE_MEMORY_DB=true' });
+    });
+
     app.listen(PORT, () => {
       console.log(`[!] CIVIC CARE running on http://localhost:${PORT} (no DB)`);
     });
-  });
+  }
+}
+
+start();

@@ -117,52 +117,12 @@
       </div>
     </div>
 
-    <div id="terminal-overlay" class="terminal-overlay" hidden>
-      <div class="terminal-window glass-card">
-        <div class="terminal-header">
-          <span class="terminal-dot red"></span>
-          <span class="terminal-dot yellow"></span>
-          <span class="terminal-dot green"></span>
-          <span class="terminal-title">CIVIC CARE AI Engine v1.0</span>
-        </div>
-        <div class="terminal-body" id="terminal-body">
-          <div class="terminal-line system">[SYSTEM] Initializing CIVIC CARE AI Pipeline...</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="result-overlay" class="terminal-overlay" hidden>
-      <div class="result-card glass-card">
-        <div id="result-success" hidden>
-          <div class="result-icon">&#9989;</div>
-          <h2>Report Submitted!</h2>
-          <p>Your issue has been processed by our AI engine.</p>
-          <div id="result-details" class="result-details"></div>
-        </div>
-        <div id="result-duplicate" hidden>
-          <div class="result-icon">&#128264;</div>
-          <h2>Duplicate Found</h2>
-          <p>This issue has already been reported nearby. Your report has been linked to the existing ticket.</p>
-          <div id="duplicate-details" class="result-details"></div>
-        </div>
-        <div id="result-error" hidden>
-          <div class="result-icon">&#10060;</div>
-          <h2>Error</h2>
-          <p id="error-message">Something went wrong. Please try again.</p>
-        </div>
-        <div class="btn-group" style="margin-top:1.5rem;justify-content:center;">
-          <a href="/" class="btn btn-secondary">&#127968; Home</a>
-          <button id="report-another" class="btn btn-primary">&#128221; Report Another</button>
-        </div>
-      </div>
-    </div>
   </main>
 
   <script>
     const _user = JSON.parse(localStorage.getItem('user') || '{}');
     const _token = localStorage.getItem('token');
     if (!_token) { window.location.href = '/login.html'; }
-    document.querySelector('.nav-logo').after(' <span style="font-size:0.75rem;color:var(--accent-green);font-weight:600;">' + (_user.name || 'Citizen') + '</span>');
   </script>
   <script src="/js/citizen-report.js"></script>
 </body>

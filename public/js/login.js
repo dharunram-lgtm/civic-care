@@ -162,7 +162,7 @@ async function handleRegister(e) {
 
 function redirectToDashboard(role) {
   const map = {
-    CITIZEN: '/citizen-report.html',
+    CITIZEN: '/citizen-dashboard.html',
     FIELD_OFFICER: '/officer-dashboard.html',
     ADMIN: '/admin-dashboard.html',
     DEPT_HEAD: '/dept-head-dashboard.html'
