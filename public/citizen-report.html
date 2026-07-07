@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CIVIC CARE — Report an Issue</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/surfaces.css">
+  <link rel="stylesheet" href="/css/citizen-report.css">
+</head>
+<body>
+  <nav class="report-nav">
+    <a href="/" class="nav-logo">&#127963; CIVIC CARE</a>
+    <div class="nav-right">
+      <button id="theme-toggle" class="btn btn-secondary" style="padding:0.5rem 1rem;font-size:0.85rem;">&#127769; Theme</button>
+    </div>
+  </nav>
+
+  <main class="report-container">
+    <div class="report-header reveal">
+      <span class="section-label">&#128221; New Report</span>
+      <h1>Report a Civic Issue</h1>
+      <p>Upload a photo, pin your location, and describe the problem. Our AI handles the rest.</p>
+    </div>
+
+    <div class="report-progress">
+      <div class="progress-step active" data-step="1">
+        <span class="step-indicator">1</span>
+        <span class="step-label">Upload Photo</span>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step" data-step="2">
+        <span class="step-indicator">2</span>
+        <span class="step-label">Location</span>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step" data-step="3">
+        <span class="step-indicator">3</span>
+        <span class="step-label">Describe</span>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step" data-step="4">
+        <span class="step-indicator">4</span>
+        <span class="step-label">Submit</span>
+      </div>
+    </div>
+
+    <div class="report-card glass-card">
+      <div id="step-1" class="form-step active">
+        <h2>&#128247; Upload an Image</h2>
+        <p>Drag & drop your photo here, or click to browse. Supported: JPG, PNG, WebP (max 10MB).</p>
+        <div id="drop-zone" class="drop-zone">
+          <div class="drop-zone-content">
+            <div class="drop-icon">&#128247;</div>
+            <p><strong>Drop your image here</strong></p>
+            <p style="font-size:0.85rem;color:var(--text-muted);">or click to browse files</p>
+          </div>
+          <input type="file" id="file-input" accept="image/*" hidden>
+          <img id="preview" class="preview-image" hidden>
+          <button id="remove-image" class="btn btn-secondary" style="display:none;margin-top:1rem;padding:0.5rem 1rem;font-size:0.85rem;">&#10005; Remove</button>
+        </div>
+      </div>
+
+      <div id="step-2" class="form-step">
+        <h2>&#128205; Your Location</h2>
+        <p>We use your GPS to pinpoint the issue location. This helps us detect nearby duplicates.</p>
+        <div id="location-status" class="location-status">
+          <div class="location-skeleton">
+            <div class="skeleton-line" style="width:60%;"></div>
+            <div class="skeleton-line" style="width:40%;"></div>
+            <div class="skeleton-line" style="width:80%;"></div>
+          </div>
+          <div id="location-coords" class="location-coords" hidden>
+            <div class="coord-row"><span>Latitude:</span> <span id="lat-display">--</span></div>
+            <div class="coord-row"><span>Longitude:</span> <span id="lng-display">--</span></div>
+            <div class="coord-row" style="color:var(--accent-green);">&#10003; GPS acquired</div>
+          </div>
+          <div id="location-error" class="location-error" hidden>
+            &#9888; Could not get GPS. You can enter coordinates manually.
+          </div>
+        </div>
+        <div class="manual-coords" style="margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div>
+            <label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.25rem;">Latitude</label>
+            <input type="number" id="manual-lat" step="any" placeholder="28.6139" class="form-input">
+          </div>
+          <div>
+            <label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.25rem;">Longitude</label>
+            <input type="number" id="manual-lng" step="any" placeholder="77.2090" class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <div id="step-3" class="form-step">
+        <h2>&#128172; Describe the Issue</h2>
+        <p>Provide details about what you're seeing. Be specific — our AI uses your description for classification.</p>
+        <textarea id="description" class="form-textarea" placeholder="Example: There is a large pothole on Main Street near the intersection with Oak Avenue. It's about 2 feet wide and cars are swerving to avoid it. This has been here for over a week." rows="6"></textarea>
+        <div class="char-count"><span id="char-count">0</span> / 500</div>
+      </div>
+
+      <div id="step-4" class="form-step">
+        <h2>&#128190; Submit Report</h2>
+        <p>Review your report below, then submit. Our AI will process it immediately.</p>
+        <div id="report-summary" class="report-summary">
+          <div class="summary-row"><span>Image:</span> <span id="summary-image">Not uploaded</span></div>
+          <div class="summary-row"><span>Location:</span> <span id="summary-location">Not set</span></div>
+          <div class="summary-row"><span>Description:</span> <span id="summary-desc">Empty</span></div>
+        </div>
+        <button id="submit-btn" class="btn btn-primary" style="width:100%;padding:1rem;font-size:1.1rem;margin-top:1.5rem;">&#9889; Submit to AI Engine</button>
+      </div>
+
+      <div class="step-nav">
+        <button id="prev-btn" class="btn btn-secondary" style="display:none;">&#8592; Back</button>
+        <button id="next-btn" class="btn btn-primary">Next &#8594;</button>
+      </div>
+    </div>
+
+    <div id="terminal-overlay" class="terminal-overlay" hidden>
+      <div class="terminal-window glass-card">
+        <div class="terminal-header">
+          <span class="terminal-dot red"></span>
+          <span class="terminal-dot yellow"></span>
+          <span class="terminal-dot green"></span>
+          <span class="terminal-title">CIVIC CARE AI Engine v1.0</span>
+        </div>
+        <div class="terminal-body" id="terminal-body">
+          <div class="terminal-line system">[SYSTEM] Initializing CIVIC CARE AI Pipeline...</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="result-overlay" class="terminal-overlay" hidden>
+      <div class="result-card glass-card">
+        <div id="result-success" hidden>
+          <div class="result-icon">&#9989;</div>
+          <h2>Report Submitted!</h2>
+          <p>Your issue has been processed by our AI engine.</p>
+          <div id="result-details" class="result-details"></div>
+        </div>
+        <div id="result-duplicate" hidden>
+          <div class="result-icon">&#128264;</div>
+          <h2>Duplicate Found</h2>
+          <p>This issue has already been reported nearby. Your report has been linked to the existing ticket.</p>
+          <div id="duplicate-details" class="result-details"></div>
+        </div>
+        <div id="result-error" hidden>
+          <div class="result-icon">&#10060;</div>
+          <h2>Error</h2>
+          <p id="error-message">Something went wrong. Please try again.</p>
+        </div>
+        <div class="btn-group" style="margin-top:1.5rem;justify-content:center;">
+          <a href="/" class="btn btn-secondary">&#127968; Home</a>
+          <button id="report-another" class="btn btn-primary">&#128221; Report Another</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/citizen-report.js"></script>
+</body>
+</html>

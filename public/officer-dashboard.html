@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CIVIC CARE — Officer Command Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="/css/surfaces.css">
+  <link rel="stylesheet" href="/css/officer-dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">&#127963;</span>
+        <span class="brand-text">CIVIC CARE</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-page="dashboard">
+          <span class="nav-icon">&#128202;</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" data-page="complaints">
+          <span class="nav-icon">&#128196;</span>
+          <span>All Complaints</span>
+          <span class="nav-badge" id="total-badge">0</span>
+        </a>
+        <a href="#" class="nav-item" data-page="critical">
+          <span class="nav-icon">&#128308;</span>
+          <span>Critical</span>
+          <span class="nav-badge critical" id="critical-badge">0</span>
+        </a>
+        <a href="#" class="nav-item" data-page="map">
+          <span class="nav-icon">&#128506;</span>
+          <span>Map View</span>
+        </a>
+        <a href="#" class="nav-item" data-page="team">
+          <span class="nav-icon">&#128101;</span>
+          <span>My Team</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="officer-info">
+          <div class="officer-avatar">&#128188;</div>
+          <div>
+            <div class="officer-name" id="officer-name">Field Officer</div>
+            <div class="officer-role" id="officer-role">FIELD_OFFICER</div>
+          </div>
+        </div>
+        <a href="/" class="btn btn-secondary" style="width:100%;padding:0.5rem;font-size:0.85rem;margin-top:0.5rem;">&#8592; Exit Dashboard</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <h1 class="page-title">Command Dashboard</h1>
+          <span class="live-indicator"><span class="live-dot"></span> LIVE</span>
+        </div>
+        <div class="top-bar-right">
+          <div class="stat-pill-mini glass-card">
+            <span class="stat-label-mini">Active</span>
+            <span class="stat-value-mini" id="active-count">0</span>
+          </div>
+          <div class="stat-pill-mini glass-card">
+            <span class="stat-label-mini">Critical</span>
+            <span class="stat-value-mini critical" id="critical-count">0</span>
+          </div>
+          <div class="stat-pill-mini glass-card">
+            <span class="stat-label-mini">Resolved Today</span>
+            <span class="stat-value-mini" id="resolved-today">0</span>
+          </div>
+          <button id="theme-toggle-officer" class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem;">&#127769;</button>
+          <button id="refresh-btn" class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem;">&#8635;</button>
+        </div>
+      </header>
+
+      <div class="dashboard-grid">
+        <div class="map-panel glass-card" id="map-panel">
+          <div id="map" class="leaflet-map"></div>
+        </div>
+
+        <div class="queue-panel">
+          <div class="queue-header">
+            <h2>&#128195; Incoming Queue</h2>
+            <div class="queue-filters">
+              <select id="filter-status" class="filter-select">
+                <option value="">All Status</option>
+                <option value="PENDING_AI_REVIEW">Pending AI</option>
+                <option value="PENDING_ADMIN_REVIEW">Pending Admin</option>
+                <option value="ROUTED">Routed</option>
+                <option value="ACCEPTED">Accepted</option>
+                <option value="IN_PROGRESS">In Progress</option>
+              </select>
+              <select id="filter-priority" class="filter-select">
+                <option value="">All Priority</option>
+                <option value="CRITICAL">Critical</option>
+                <option value="HIGH">High</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+              </select>
+            </div>
+          </div>
+          <div class="queue-list" id="queue-list">
+            <div class="queue-empty state-message">
+              <div style="font-size:3rem;margin-bottom:0.5rem;">&#128197;</div>
+              <p>No complaints in queue.</p>
+              <p style="font-size:0.85rem;color:var(--text-muted);">New reports will appear here automatically.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon blue">&#128200;</div>
+          <div class="stat-card-info">
+            <span class="stat-card-value" id="stat-total">0</span>
+            <span class="stat-card-label">Total Complaints</span>
+          </div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon green">&#9989;</div>
+          <div class="stat-card-info">
+            <span class="stat-card-value" id="stat-resolved">0</span>
+            <span class="stat-card-label">Resolved</span>
+          </div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon red">&#128308;</div>
+          <div class="stat-card-info">
+            <span class="stat-card-value" id="stat-critical">0</span>
+            <span class="stat-card-label">Critical Open</span>
+          </div>
+        </div>
+        <div class="stat-card glass-card">
+          <div class="stat-card-icon orange">&#9888;</div>
+          <div class="stat-card-info">
+            <span class="stat-card-value" id="stat-pending">0</span>
+            <span class="stat-card-label">Pending Review</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/js/officer-dashboard.js"></script>
+</body>
+</html>

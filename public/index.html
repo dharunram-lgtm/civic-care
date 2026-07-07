@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CIVIC CARE — AI-Powered Civic Issue Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/surfaces.css">
+  <style>
+    .webgl-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .landing-content { position: relative; z-index: 1; }
+
+    .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 2rem; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: var(--mesh-gradient); pointer-events: none; }
+    .hero-inner { position: relative; z-index: 2; text-align: center; max-width: 800px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.4rem 1rem; border-radius: 999px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); font-size: 0.8rem; color: var(--accent-blue); margin-bottom: 1.5rem; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600; }
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1.5rem; }
+    .hero h1 span { background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: 1.2rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 2rem; line-height: 1.7; }
+    .hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .hero-cta .btn { min-width: 180px; padding: 1rem 2rem; font-size: 1.05rem; }
+
+    .frostglass-hero-card { max-width: 700px; margin: 2rem auto 0; padding: 2.5rem 3rem; text-align: center; animation: fadeInUp 1s ease 0.5s both; }
+    .frostglass-hero-card h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+    .frostglass-hero-card p { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; }
+    .frostglass-hero-card .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .pulse-dots { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+    .pulse-dot { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--accent-blue); opacity: 0.3; animation: pulse-dot 3s ease-in-out infinite; }
+    .pulse-dot:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; background: var(--accent-cyan); }
+    .pulse-dot:nth-child(2) { top: 25%; right: 15%; animation-delay: 0.5s; background: var(--accent-purple); }
+    .pulse-dot:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 1s; }
+    .pulse-dot:nth-child(4) { bottom: 20%; right: 25%; animation-delay: 1.5s; background: var(--accent-orange); }
+    .pulse-dot:nth-child(5) { top: 50%; left: 50%; animation-delay: 2s; background: var(--accent-green); }
+    .pulse-dot:nth-child(6) { top: 10%; left: 40%; animation-delay: 2.5s; background: var(--accent-red); }
+
+    .section { padding: 6rem 2rem; position: relative; }
+    .section-label { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.8rem; border-radius: 999px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); font-size: 0.75rem; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 1rem; }
+    .section h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; text-align: center; }
+    .section > .subtitle { text-align: center; color: var(--text-secondary); max-width: 600px; margin: 0 auto 3rem; font-size: 1.1rem; }
+
+    .how-it-works-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+    .how-step { padding: 2rem; text-align: center; }
+    .how-step .step-number { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); color: white; font-weight: 800; font-size: 1.2rem; margin: 0 auto 1rem; }
+    .how-step h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .how-step p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; }
+
+    .stats-strip { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; max-width: 1100px; margin: 0 auto; padding: 2rem; }
+    .stat-pill { padding: 1.5rem 2.5rem; text-align: center; min-width: 200px; }
+    .stat-pill .stat-number { font-size: 2.5rem; font-weight: 900; letter-spacing: -0.02em; background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-pill .stat-label { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.25rem; }
+
+    .dept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; max-width: 900px; margin: 0 auto; }
+    .dept-badge { padding: 1.25rem 1rem; text-align: center; font-weight: 600; font-size: 0.85rem; }
+    .dept-badge .dept-icon { font-size: 1.8rem; margin-bottom: 0.5rem; display: block; }
+
+    .footer-cta { text-align: center; max-width: 700px; margin: 0 auto; padding: 3rem; }
+    .footer-cta h2 { font-size: 2rem; margin-bottom: 1rem; }
+    .footer-cta p { color: var(--text-secondary); margin-bottom: 2rem; }
+    .footer-cta .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .footer-bottom { text-align: center; padding: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-muted); font-size: 0.85rem; }
+
+    .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      .frostglass-hero-card { padding: 1.5rem; margin: 1rem; }
+      .stats-strip { gap: 1rem; }
+      .stat-pill { min-width: 140px; padding: 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="webgl-canvas" class="webgl-canvas"></canvas>
+
+  <div class="landing-content">
+    <section class="hero" id="hero">
+      <div class="pulse-dots">
+        <div class="pulse-dot"></div>
+        <div class="pulse-dot"></div>
+        <div class="pulse-dot"></div>
+        <div class="pulse-dot"></div>
+        <div class="pulse-dot"></div>
+        <div class="pulse-dot"></div>
+      </div>
+      <div class="hero-inner">
+        <div class="hero-badge">&#9889; Powered by Multi-Modal AI</div>
+        <h1>Civic issues,<br><span>resolved at the speed of AI.</span></h1>
+        <p>Report potholes, garbage, water leaks, and more. Our AI automatically classifies, prioritizes, and routes your complaint to the right department — in seconds.</p>
+        <div class="hero-cta">
+          <a href="/citizen-report.html" class="btn btn-primary">&#128221; Report an Issue</a>
+          <a href="/officer-dashboard.html" class="btn btn-secondary">&#128274; Officer Login</a>
+        </div>
+        <div class="frostglass-hero-card frostglass-card">
+          <h2>&#128200; Real-Time Command Center</h2>
+          <p>AI-powered triage, geospatial deduplication, and automated routing across 7 departments.</p>
+          <div class="btn-group">
+            <a href="/citizen-report.html" class="btn btn-primary" style="padding:0.6rem 1.2rem;font-size:0.9rem;">&#128221; File a Report</a>
+            <a href="/officer-dashboard.html" class="btn btn-secondary" style="padding:0.6rem 1.2rem;font-size:0.9rem;">&#128188; Officer Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how-it-works">
+      <div class="reveal">
+        <div class="section-label" style="display:table;margin:0 auto 1rem;">&#9889; How It Works</div>
+        <h2>From Report to Resolution<br>in 4 Simple Steps</h2>
+        <p class="subtitle">Snap a photo, describe the issue, and let our AI handle the rest — no department knowledge needed.</p>
+      </div>
+      <div class="how-it-works-grid reveal">
+        <div class="how-step clay-card">
+          <div class="step-number">1</div>
+          <h3>&#128247; Upload & Describe</h3>
+          <p>Take a photo or drag & drop an image of the issue. Add a brief description of what you're seeing.</p>
+        </div>
+        <div class="how-step clay-card">
+          <div class="step-number">2</div>
+          <h3>&#129302; AI Classification</h3>
+          <p>Our YOLOv8 and NLP engines analyze the image and text to identify the issue type and severity.</p>
+        </div>
+        <div class="how-step clay-card">
+          <div class="step-number">3</div>
+          <h3>&#128279; Auto-Routing</h3>
+          <p>The system checks for nearby duplicates and routes your complaint to the correct department.</p>
+        </div>
+        <div class="how-step clay-card">
+          <div class="step-number">4</div>
+          <h3>&#9989; Track & Resolve</h3>
+          <p>Monitor progress in real-time. Get notified when your issue is accepted, in progress, and resolved.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="stats" style="padding:4rem 2rem;">
+      <div class="stats-strip">
+        <div class="stat-pill glass-card reveal">
+          <div class="stat-number" data-target="12403">0</div>
+          <div class="stat-label">Issues Resolved</div>
+        </div>
+        <div class="stat-pill glass-card reveal">
+          <div class="stat-number" data-target="38">0</div>
+          <div class="stat-label">Departments Connected</div>
+        </div>
+        <div class="stat-pill glass-card reveal">
+          <div class="stat-number" data-target="92">0</div>
+          <div class="stat-label">AI Routing Accuracy %</div>
+        </div>
+        <div class="stat-pill glass-card reveal">
+          <div class="stat-number" data-target="4.2">0</div>
+          <div class="stat-label">Avg. Resolution Hours</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="departments">
+      <div class="reveal">
+        <div class="section-label" style="display:table;margin:0 auto 1rem;">&#127973; Connected Departments</div>
+        <h2>7 Departments, One Platform</h2>
+        <p class="subtitle">Every civic issue finds its home through our intelligent routing matrix.</p>
+      </div>
+      <div class="dept-grid reveal">
+        <div class="dept-badge clay-card"><span class="dept-icon">&#128683;</span>Sanitation</div>
+        <div class="dept-badge clay-card"><span class="dept-icon">&#128739;</span>Roads</div>
+        <div class="dept-badge clay-card"><span class="dept-icon">&#128167;</span>Municipality</div>
+        <div class="dept-badge clay-card"><span class="dept-icon">&#128161;</span>Electricity</div>
+        <div class="dept-badge clay-card"><span class="dept-icon">&#128663;</span>Traffic Police</div>
+        <div class="dept-badge clay-card"><span class="dept-icon">&#128686;</span>Municipal Corp.</div>
+        <div class="dept-badge clay-card"><span class="dept-icon">&#127794;</span>Parks & Horticulture</div>
+      </div>
+    </section>
+
+    <section class="section" id="footer-cta" style="padding:4rem 2rem;">
+      <div class="footer-cta frostglass-card reveal">
+        <h2>&#127919; Ready to Transform Your City?</h2>
+        <p>Join thousands of citizens and officers using CIVIC CARE to resolve issues faster.</p>
+        <div class="btn-group">
+          <a href="/citizen-report.html" class="btn btn-primary">&#128221; Report an Issue</a>
+          <a href="/officer-dashboard.html" class="btn btn-secondary">&#128188; Officer Login</a>
+        </div>
+        <div style="margin-top:1.5rem;font-size:0.85rem;color:var(--text-secondary);">
+          <a href="#" style="margin:0 0.5rem;">Citizen Login</a> &middot;
+          <a href="#" style="margin:0 0.5rem;">Admin Portal</a> &middot;
+          <a href="#" style="margin:0 0.5rem;">API Access</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer-bottom">
+      <p>&copy; 2024 CIVIC CARE — Intelligent Automation Platform. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="/js/landing.js"></script>
+</body>
+</html>
