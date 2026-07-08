@@ -6,6 +6,7 @@ const { authenticate, authorize } = require('../middleware/auth');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
+router.get('/public-stats', complaintsController.getPublicStats);
 router.post('/', authenticate, upload.single('image'), complaintsController.createComplaint);
 router.get('/', authenticate, complaintsController.getComplaints);
 router.get('/stats', authenticate, complaintsController.getStats);

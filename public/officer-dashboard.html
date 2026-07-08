@@ -50,7 +50,7 @@
             <div class="officer-role" id="officer-role">FIELD_OFFICER</div>
           </div>
         </div>
-        <a href="/" class="btn btn-secondary" style="width:100%;padding:0.5rem;font-size:0.85rem;margin-top:0.5rem;">&#8592; Exit Dashboard</a>
+        <button id="logout-btn-officer" class="btn btn-secondary" style="width:100%;padding:0.5rem;font-size:0.85rem;margin-top:0.5rem;">&#8592; Sign Out</button>
       </div>
     </aside>
 
@@ -94,6 +94,8 @@
                 <option value="ROUTED">Routed</option>
                 <option value="ACCEPTED">Accepted</option>
                 <option value="IN_PROGRESS">In Progress</option>
+                <option value="RESOLVED">Resolved</option>
+                <option value="CLOSED">Closed</option>
               </select>
               <select id="filter-priority" class="filter-select">
                 <option value="">All Priority</option>
@@ -152,6 +154,12 @@
     const _token = localStorage.getItem('token');
     if (!_token || !['FIELD_OFFICER', 'ADMIN'].includes(_user.role)) { window.location.href = '/login.html'; }
     if (_user.name) { document.getElementById('officer-name').textContent = _user.name; }
+
+    document.getElementById('logout-btn-officer').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login.html';
+    });
   </script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="/js/officer-dashboard.js"></script>

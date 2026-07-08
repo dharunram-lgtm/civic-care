@@ -142,6 +142,17 @@ exports.updateComplaintStatus = async (req, res) => {
   }
 };
 
+exports.getPublicStats = async (req, res) => {
+  try {
+    const total = await Complaint.countDocuments();
+    const resolved = await Complaint.countDocuments({ status: { $in: ['RESOLVED', 'CLOSED'] } });
+    const remaining = await Complaint.countDocuments({ status: { $nin: ['RESOLVED', 'CLOSED', 'DUPLICATE'] } });
+    res.json({ total, resolved, remaining });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 exports.getStats = async (req, res) => {
   try {
     const totalComplaints = await Complaint.countDocuments();

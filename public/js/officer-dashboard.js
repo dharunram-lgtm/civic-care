@@ -3,15 +3,6 @@
   let mapMarkers = [];
   let complaintsData = [];
 
-  const mockComplaints = [
-    { _id: '1', title: 'Large pothole on Main Street', description: 'A large pothole near the intersection causing traffic hazards.', priority: 'CRITICAL', status: 'PENDING_AI_REVIEW', aiCategory: 'Pothole', aiConfidenceScore: 94, location: { coordinates: [77.2090, 28.6139] }, createdAt: new Date().toISOString(), departmentId: { name: 'Roads Department' } },
-    { _id: '2', title: 'Garbage pile not collected', description: 'Garbage has been sitting on the corner for 5 days.', priority: 'HIGH', status: 'ROUTED', aiCategory: 'Garbage', aiConfidenceScore: 89, location: { coordinates: [77.2190, 28.6239] }, createdAt: new Date().toISOString(), departmentId: { name: 'Sanitation Department' } },
-    { _id: '3', title: 'Broken streetlight', description: 'Streetlight on Oak Avenue has been out for weeks.', priority: 'MEDIUM', status: 'ACCEPTED', aiCategory: 'Streetlight', aiConfidenceScore: 92, location: { coordinates: [77.1990, 28.6039] }, createdAt: new Date().toISOString(), departmentId: { name: 'Electricity Department' } },
-    { _id: '4', title: 'Water leakage on Park Road', description: 'Pipe burst causing water flow on the road.', priority: 'CRITICAL', status: 'IN_PROGRESS', aiCategory: 'Water Leakage', aiConfidenceScore: 96, location: { coordinates: [77.2290, 28.6339] }, createdAt: new Date().toISOString(), departmentId: { name: 'Municipality Department' } },
-    { _id: '5', title: 'Traffic signal not working', description: 'Traffic light at the main junction is completely dark.', priority: 'HIGH', status: 'ROUTED', aiCategory: 'Traffic Signal', aiConfidenceScore: 88, location: { coordinates: [77.2390, 28.6439] }, createdAt: new Date().toISOString(), departmentId: { name: 'Traffic Police Department' } },
-    { _id: '6', title: 'Illegal dumping in alley', description: 'Construction debris dumped behind the market.', priority: 'MEDIUM', status: 'PENDING_ADMIN_REVIEW', aiCategory: 'Illegal Dumping', aiConfidenceScore: 78, location: { coordinates: [77.1790, 28.5939] }, createdAt: new Date().toISOString(), departmentId: { name: 'Municipal Corporation' } },
-    { _id: '7', title: 'Fallen tree blocking road', description: 'A large tree has fallen across the road after the storm.', priority: 'CRITICAL', status: 'PENDING_AI_REVIEW', aiCategory: 'Fallen Tree', aiConfidenceScore: 97, location: { coordinates: [77.2490, 28.6539] }, createdAt: new Date().toISOString(), departmentId: { name: 'Parks & Horticulture Department' } },
-  ];
 
   const themeToggle = document.getElementById('theme-toggle-officer');
   themeToggle.addEventListener('click', () => {
@@ -123,8 +114,9 @@
           </div>
           <div class="ticket-confidence">&#129302; AI Match: ${c.aiConfidenceScore || 0}%</div>
           <div class="ticket-actions">
-            <button class="btn btn-accept accept-btn" data-id="${c._id}">&#10003; Accept</button>
-            <button class="btn btn-critical dispatch-btn" data-id="${c._id}">&#128666; Dispatch</button>
+            ${c.status !== 'ACCEPTED' && c.status !== 'IN_PROGRESS' && c.status !== 'RESOLVED' && c.status !== 'CLOSED' ? `<button class="btn btn-accept accept-btn" data-id="${c._id}">&#10003; Accept</button>` : ''}
+            ${c.status === 'ACCEPTED' || c.status === 'IN_PROGRESS' ? `<button class="btn btn-critical dispatch-btn" data-id="${c._id}">&#128666; Dispatch</button>` : ''}
+            ${c.status !== 'RESOLVED' && c.status !== 'CLOSED' ? `<button class="btn btn-primary complete-btn" data-id="${c._id}">&#9989; Complete</button>` : ''}
           </div>
         </div>`;
     }).join('');
@@ -140,6 +132,13 @@
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         dispatchComplaint(btn.dataset.id);
+      });
+    });
+
+    queue.querySelectorAll('.complete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        completeComplaint(btn.dataset.id);
       });
     });
 
@@ -201,6 +200,15 @@
     }
   }
 
+  function completeComplaint(id) {
+    const c = complaintsData.find(x => x._id === id);
+    if (c) {
+      c.status = 'RESOLVED';
+      renderQueue(complaintsData);
+      updateStats(complaintsData);
+    }
+  }
+
   function applyFilters() {
     const statusFilter = document.getElementById('filter-status').value;
     const priorityFilter = document.getElementById('filter-priority').value;
@@ -232,10 +240,10 @@
         const data = await response.json();
         complaintsData = data.complaints || [];
       } else {
-        complaintsData = mockComplaints;
+        complaintsData = [];
       }
     } catch (err) {
-      complaintsData = mockComplaints;
+      complaintsData = [];
     }
 
     renderQueue(complaintsData);

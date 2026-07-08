@@ -164,4 +164,35 @@
       heroCard.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
     });
   }
+
+  async function loadLiveStats() {
+    try {
+      const res = await fetch('/api/complaints/public-stats');
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      document.getElementById('live-total').textContent = data.total;
+      document.getElementById('live-resolved').textContent = data.resolved;
+      document.getElementById('live-remaining').textContent = data.remaining;
+      const pct = data.total > 0 ? Math.round((data.resolved / data.total) * 100) : 0;
+      document.getElementById('live-percent').textContent = pct + '%';
+      document.getElementById('live-bar').style.width = pct + '%';
+    } catch {
+      document.getElementById('live-total').textContent = '--';
+      document.getElementById('live-resolved').textContent = '--';
+      document.getElementById('live-remaining').textContent = '--';
+    }
+  }
+
+  const liveSection = document.getElementById('live-stats');
+  if (liveSection) {
+    const liveObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          loadLiveStats();
+          liveObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    liveObserver.observe(liveSection);
+  }
 })();
