@@ -68,9 +68,8 @@
         <p>We use your GPS to pinpoint the issue location. This helps us detect nearby duplicates.</p>
         <div id="location-status" class="location-status">
           <div class="location-skeleton">
-            <div class="skeleton-line" style="width:60%;"></div>
-            <div class="skeleton-line" style="width:40%;"></div>
-            <div class="skeleton-line" style="width:80%;"></div>
+            <div class="skeleton-line" style="width:80%;">&#128337; Acquiring GPS signal...</div>
+            <div class="skeleton-line" style="width:60%;">Make sure location is enabled on your device.</div>
           </div>
           <div id="location-coords" class="location-coords" hidden>
             <div class="coord-row"><span>Latitude:</span> <span id="lat-display">--</span></div>
@@ -78,7 +77,7 @@
             <div class="coord-row" style="color:var(--accent-green);">&#10003; GPS acquired</div>
           </div>
           <div id="location-error" class="location-error" hidden>
-            &#9888; Could not get GPS. You can enter coordinates manually.
+            &#9888; Could not get GPS. Enter your location manually below.
           </div>
         </div>
         <div class="manual-coords" style="margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">

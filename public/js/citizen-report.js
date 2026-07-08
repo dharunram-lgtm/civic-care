@@ -164,20 +164,31 @@
       return;
     }
 
+    function onSuccess(pos) {
+      latitude = pos.coords.latitude;
+      longitude = pos.coords.longitude;
+      document.getElementById('lat-display').textContent = latitude.toFixed(6);
+      document.getElementById('lng-display').textContent = longitude.toFixed(6);
+      skeleton.hidden = true;
+      coordsDiv.hidden = false;
+    }
+
+    function onError() {
+      skeleton.querySelector('.skeleton-line:first-child').textContent = 'GPS unavailable, trying network...';
+      navigator.geolocation.getCurrentPosition(
+        onSuccess,
+        () => {
+          skeleton.hidden = true;
+          errorDiv.hidden = false;
+        },
+        { enableHighAccuracy: false, timeout: 15000 }
+      );
+    }
+
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        latitude = pos.coords.latitude;
-        longitude = pos.coords.longitude;
-        document.getElementById('lat-display').textContent = latitude.toFixed(6);
-        document.getElementById('lng-display').textContent = longitude.toFixed(6);
-        skeleton.hidden = true;
-        coordsDiv.hidden = false;
-      },
-      (err) => {
-        skeleton.hidden = true;
-        errorDiv.hidden = false;
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
+      onSuccess,
+      onError,
+      { enableHighAccuracy: true, timeout: 20000 }
     );
   }
 
