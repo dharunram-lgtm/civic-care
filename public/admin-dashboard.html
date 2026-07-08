@@ -291,7 +291,7 @@
         });
         if (res.ok) {
           const data = await res.json();
-          document.getElementById('stat-total').textContent = data.total ?? '--';
+          document.getElementById('stat-total').textContent = data.totalComplaints ?? '--';
           document.getElementById('stat-resolved').textContent = data.resolved ?? '--';
         }
       } catch {}
@@ -417,6 +417,7 @@
         });
         if (!res.ok) throw new Error();
         const data = await res.json();
+        document.getElementById('stat-users').textContent = data.users?.length ?? '--';
         const tbody = document.getElementById('users-body');
         if (!data.users?.length) {
           tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No users found.</td></tr>';
