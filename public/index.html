@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" style="scroll-behavior:smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,6 +66,29 @@
     .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+    .reveal-right { opacity: 0; transform: translateX(40px); transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    .reveal-scale { opacity: 0; transform: scale(0.85); transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    .reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+    .scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan), var(--accent-purple)); z-index: 9999; width: 0%; transition: width 0.1s linear; }
+
+    .scroll-indicator { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; animation: float-down 2s ease-in-out infinite; z-index: 2; }
+    .scroll-indicator .mouse { width: 24px; height: 38px; border: 2px solid var(--text-muted); border-radius: 12px; display: flex; justify-content: center; padding-top: 8px; }
+    .scroll-indicator .mouse .wheel { width: 3px; height: 8px; background: var(--accent-blue); border-radius: 3px; animation: scroll-wheel 2s ease-in-out infinite; }
+
+    @keyframes float-down { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+    @keyframes scroll-wheel { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(12px); } }
+
+    .stagger-1 { transition-delay: 0.1s; }
+    .stagger-2 { transition-delay: 0.2s; }
+    .stagger-3 { transition-delay: 0.3s; }
+    .stagger-4 { transition-delay: 0.4s; }
+
     @media (max-width: 768px) {
       .frostglass-hero-card { padding: 1.5rem; margin: 1rem; }
       .stats-strip { gap: 1rem; }
@@ -74,6 +97,7 @@
   </style>
 </head>
 <body>
+  <div class="scroll-progress" id="scroll-progress"></div>
   <canvas id="webgl-canvas" class="webgl-canvas"></canvas>
 
   <div class="landing-content">
@@ -95,6 +119,10 @@
           <a href="/login.html" class="btn btn-secondary">&#128274; Sign In</a>
         </div>
 
+      </div>
+      <div class="scroll-indicator">
+        <div class="mouse"><div class="wheel"></div></div>
+        <span>Scroll</span>
       </div>
     </section>
 
@@ -137,23 +165,23 @@
         <h2>From Report to Resolution<br>in 4 Simple Steps</h2>
         <p class="subtitle">Snap a photo, describe the issue, and let our AI handle the rest — no department knowledge needed.</p>
       </div>
-      <div class="how-it-works-grid reveal">
-        <div class="how-step clay-card">
+      <div class="how-it-works-grid">
+        <div class="how-step clay-card reveal-left stagger-1">
           <div class="step-number">1</div>
           <h3>&#128247; Upload & Describe</h3>
           <p>Take a photo or drag & drop an image of the issue. Add a brief description of what you're seeing.</p>
         </div>
-        <div class="how-step clay-card">
+        <div class="how-step clay-card reveal-left stagger-2">
           <div class="step-number">2</div>
           <h3>&#129302; AI Classification</h3>
           <p>Our YOLOv8 and NLP engines analyze the image and text to identify the issue type and severity.</p>
         </div>
-        <div class="how-step clay-card">
+        <div class="how-step clay-card reveal-right stagger-3">
           <div class="step-number">3</div>
           <h3>&#128279; Auto-Routing</h3>
           <p>The system checks for nearby duplicates and routes your complaint to the correct department.</p>
         </div>
-        <div class="how-step clay-card">
+        <div class="how-step clay-card reveal-right stagger-4">
           <div class="step-number">4</div>
           <h3>&#9989; Track & Resolve</h3>
           <p>Monitor progress in real-time. Get notified when your issue is accepted, in progress, and resolved.</p>
@@ -188,14 +216,14 @@
         <h2>7 Departments, One Platform</h2>
         <p class="subtitle">Every civic issue finds its home through our intelligent routing matrix.</p>
       </div>
-      <div class="dept-grid reveal">
-        <div class="dept-badge clay-card"><span class="dept-icon">&#128683;</span>Sanitation</div>
-        <div class="dept-badge clay-card"><span class="dept-icon">&#128739;</span>Roads</div>
-        <div class="dept-badge clay-card"><span class="dept-icon">&#128167;</span>Municipality</div>
-        <div class="dept-badge clay-card"><span class="dept-icon">&#128161;</span>Electricity</div>
-        <div class="dept-badge clay-card"><span class="dept-icon">&#128663;</span>Traffic Police</div>
-        <div class="dept-badge clay-card"><span class="dept-icon">&#128686;</span>Municipal Corp.</div>
-        <div class="dept-badge clay-card"><span class="dept-icon">&#127794;</span>Parks & Horticulture</div>
+      <div class="dept-grid">
+        <div class="dept-badge clay-card reveal-scale stagger-1"><span class="dept-icon">&#128683;</span>Sanitation</div>
+        <div class="dept-badge clay-card reveal-scale stagger-2"><span class="dept-icon">&#128739;</span>Roads</div>
+        <div class="dept-badge clay-card reveal-scale stagger-3"><span class="dept-icon">&#128167;</span>Municipality</div>
+        <div class="dept-badge clay-card reveal-scale stagger-4"><span class="dept-icon">&#128161;</span>Electricity</div>
+        <div class="dept-badge clay-card reveal-scale stagger-1"><span class="dept-icon">&#128663;</span>Traffic Police</div>
+        <div class="dept-badge clay-card reveal-scale stagger-2"><span class="dept-icon">&#128686;</span>Municipal Corp.</div>
+        <div class="dept-badge clay-card reveal-scale stagger-3"><span class="dept-icon">&#127794;</span>Parks & Horticulture</div>
       </div>
     </section>
 
