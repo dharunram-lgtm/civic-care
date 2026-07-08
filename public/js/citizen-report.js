@@ -239,8 +239,25 @@
 
     isSubmitting = false;
     submitBtn.disabled = false;
-    submitBtn.textContent = response ? '\u26A0\uFE0F Server error - try again' : '\u26A0\uFE0F Could not reach server';
-    setTimeout(() => { submitBtn.textContent = '\u26A1 Submit to AI Engine'; }, 3000);
+
+    let errMsg = '\u26A0\uFE0F Server error';
+    if (response) {
+      try {
+        const errData = await response.json();
+        errMsg = errData.error || errMsg;
+      } catch (_) {}
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setTimeout(() => { window.location.href = '/login.html'; }, 2000);
+        return;
+      }
+    } else {
+      errMsg = '\u26A0\uFE0F Could not reach server';
+    }
+
+    submitBtn.textContent = errMsg;
+    setTimeout(() => { submitBtn.textContent = '\u26A1 Submit to AI Engine'; }, 4000);
   });
 
   goToStep(1);

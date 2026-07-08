@@ -22,12 +22,17 @@ exports.createComplaint = async (req, res) => {
       parseFloat(longitude)
     );
 
-    const duplicate = await checkDuplicateComplaint(
-      Complaint,
-      parseFloat(latitude),
-      parseFloat(longitude),
-      aiResult.aiCategory
-    );
+    let duplicate = null;
+    try {
+      duplicate = await checkDuplicateComplaint(
+        Complaint,
+        parseFloat(latitude),
+        parseFloat(longitude),
+        aiResult.aiCategory
+      );
+    } catch (dupErr) {
+      console.warn('[!] Duplicate check skipped:', dupErr.message);
+    }
 
     let status = aiResult.status;
     let masterComplaintId = null;
@@ -38,7 +43,7 @@ exports.createComplaint = async (req, res) => {
     }
 
     const imageUrl = req.file
-      ? `/uploads/${req.file.filename}`
+      ? `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`
       : `/assets/mock-${aiResult.aiCategory.toLowerCase().replace(/\s+/g, '-')}.jpg`;
 
     const complaint = await Complaint.create({
