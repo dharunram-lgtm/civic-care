@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: civic-care
+    runtime: node
+    repo: https://github.com/dharunram-lgtm/civic-care
+    region: oregon
+    plan: free
+    buildCommand: npm install --prefix backend
+    startCommand: node backend/server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: USE_MEMORY_DB
+        value: true
+      - key: MONGODB_URI
+        value: ""
