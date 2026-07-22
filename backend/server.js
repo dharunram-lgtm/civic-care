@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/complaints', complaintRoutes);
@@ -32,7 +32,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
@@ -52,7 +52,7 @@ async function start() {
       console.log('[+] MongoDB connected successfully');
     }
 
-    const Department = require('./models/Department');
+    const Department = require('../database/models/Department');
     const deptCount = await Department.countDocuments();
     if (deptCount === 0) {
       await Department.insertMany([
@@ -67,7 +67,7 @@ async function start() {
       console.log('[+] Default departments seeded');
     }
 
-    const User = require('./models/User');
+    const User = require('../database/models/User');
     const bcrypt = require('bcryptjs');
     const adminEmail = 'dharun@admin.com';
     const adminExists = await User.findOne({ email: adminEmail });

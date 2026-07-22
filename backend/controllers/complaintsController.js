@@ -1,5 +1,5 @@
-const Complaint = require('../models/Complaint');
-const Department = require('../models/Department');
+const Complaint = require('../../database/models/Complaint');
+const Department = require('../../database/models/Department');
 const { processComplaint } = require('../services/aiProcessing');
 const { checkDuplicateComplaint } = require('../services/deduplication');
 
