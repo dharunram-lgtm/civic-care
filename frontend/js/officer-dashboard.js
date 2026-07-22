@@ -177,36 +177,40 @@
     document.getElementById('total-badge').textContent = total;
   }
 
-  function acceptComplaint(id) {
-    const c = complaintsData.find(x => x._id === id);
-    if (c) {
-      c.status = 'ACCEPTED';
-      renderQueue(complaintsData);
-      updateStats(complaintsData);
-      const btn = document.querySelector(`.accept-btn[data-id="${id}"]`);
-      if (btn) {
-        btn.textContent = '\u2713 Accepted';
-        btn.style.background = 'var(--accent-green)';
+  async function updateComplaintStatusOnServer(id, status) {
+    try {
+      const token = localStorage.getItem('token');
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const res = await fetch(`/api/complaints/${id}/status`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ status })
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Failed to update status');
       }
+      await loadComplaints();
+    } catch (err) {
+      console.error(err);
+      alert('Failed to update status: ' + err.message);
     }
+  }
+
+  function acceptComplaint(id) {
+    updateComplaintStatusOnServer(id, 'ACCEPTED');
   }
 
   function dispatchComplaint(id) {
-    const c = complaintsData.find(x => x._id === id);
-    if (c) {
-      c.status = 'IN_PROGRESS';
-      renderQueue(complaintsData);
-      updateStats(complaintsData);
-    }
+    updateComplaintStatusOnServer(id, 'IN_PROGRESS');
   }
 
   function completeComplaint(id) {
-    const c = complaintsData.find(x => x._id === id);
-    if (c) {
-      c.status = 'RESOLVED';
-      renderQueue(complaintsData);
-      updateStats(complaintsData);
-    }
+    updateComplaintStatusOnServer(id, 'RESOLVED');
   }
 
   function applyFilters() {
@@ -251,8 +255,33 @@
     updateMapMarkers(complaintsData);
   }
 
+  // --- WebSocket Connection ---
+  function connectWebSocket() {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}`;
+    let ws = new WebSocket(wsUrl);
+
+    ws.onmessage = (event) => {
+      try {
+        const msg = JSON.parse(event.data);
+        if (msg.type === 'COMPLAINT_CREATED' || msg.type === 'COMPLAINT_UPDATED') {
+          console.log('[+] Received WebSocket update:', msg);
+          loadComplaints();
+        }
+      } catch (e) {
+        console.error('Error handling WebSocket message:', e);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('[-] WebSocket closed, attempting reconnect...');
+      setTimeout(connectWebSocket, 5000);
+    };
+  }
+
   initMap();
   loadComplaints();
+  connectWebSocket();
 
   setInterval(() => {
     document.querySelectorAll('.ticket-card').forEach((card, i) => {

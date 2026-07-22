@@ -62,8 +62,23 @@ exports.createComplaint = async (req, res) => {
       masterComplaintId
     });
 
+    // Populate and broadcast new complaint
+    const populatedComplaint = await Complaint.findById(complaint._id)
+      .populate('citizenId', 'name email')
+      .populate('departmentId', 'name')
+      .populate('assignedOfficerId', 'name email');
+
+    const wss = req.app.get('wss');
+    if (wss) {
+      wss.clients.forEach(client => {
+        if (client.readyState === 1) {
+          client.send(JSON.stringify({ type: 'COMPLAINT_CREATED', data: populatedComplaint }));
+        }
+      });
+    }
+
     res.status(201).json({
-      complaint,
+      complaint: populatedComplaint,
       aiResult: {
         category: aiResult.aiCategory,
         confidence: aiResult.aiConfidenceScore,
@@ -130,10 +145,19 @@ exports.getComplaintById = async (req, res) => {
 
 exports.updateComplaintStatus = async (req, res) => {
   try {
-    const { status, assignedOfficerId } = req.body;
+    const { status, assignedOfficerId, officerName } = req.body;
     const update = { updatedAt: Date.now() };
     if (status) update.status = status;
-    if (assignedOfficerId) update.assignedOfficerId = assignedOfficerId;
+    
+    if (assignedOfficerId) {
+      update.assignedOfficerId = assignedOfficerId;
+    } else if (officerName) {
+      const User = require('../../database/models/User');
+      const officer = await User.findOne({ name: new RegExp('^' + officerName + '$', 'i'), role: 'FIELD_OFFICER' });
+      if (officer) {
+        update.assignedOfficerId = officer._id;
+      }
+    }
 
     const complaint = await Complaint.findByIdAndUpdate(req.params.id, update, { new: true });
 
@@ -141,7 +165,22 @@ exports.updateComplaintStatus = async (req, res) => {
       return res.status(404).json({ error: 'Complaint not found.' });
     }
 
-    res.json({ complaint });
+    // Populate and broadcast update
+    const populatedComplaint = await Complaint.findById(complaint._id)
+      .populate('citizenId', 'name email')
+      .populate('departmentId', 'name')
+      .populate('assignedOfficerId', 'name email');
+
+    const wss = req.app.get('wss');
+    if (wss) {
+      wss.clients.forEach(client => {
+        if (client.readyState === 1) {
+          client.send(JSON.stringify({ type: 'COMPLAINT_UPDATED', data: populatedComplaint }));
+        }
+      });
+    }
+
+    res.json({ complaint: populatedComplaint });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

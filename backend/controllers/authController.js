@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../../database/models/User');
+const Department = require('../../database/models/Department');
 
 exports.register = async (req, res) => {
   try {
@@ -87,6 +88,12 @@ exports.createUser = async (req, res) => {
     }
 
     const user = await User.create(userData);
+
+    if (user.role === 'FIELD_OFFICER' && user.departmentId) {
+      await Department.findByIdAndUpdate(user.departmentId, {
+        $addToSet: { officers: user._id }
+      });
+    }
 
     res.status(201).json({
       user: {

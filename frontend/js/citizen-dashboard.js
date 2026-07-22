@@ -54,8 +54,8 @@
         '<div class="complaint-top">' +
         '<div class="complaint-title">' + (c.title || desc || 'Complaint') + '</div>' +
         '<div style="display:flex;gap:0.4rem;align-items:center;flex-shrink:0;">' +
-        '<span class="priority-badge ' + priorityClass + '">' + c.priority + '</span>' +
-        '<span class="status-badge ' + statusClass + '">' + c.status.replace(/_/g, ' ') + '</span>' +
+        '<span class="priority-badge ' + priorityClass + '">' + (c.priority || 'LOW') + '</span>' +
+        '<span class="status-badge ' + statusClass + '">' + (c.status || '').replace(/_/g, ' ') + '</span>' +
         '</div>' +
         '</div>' +
         '<div class="complaint-meta">' +
@@ -77,8 +77,33 @@
 
   document.getElementById('refresh-btn').addEventListener('click', loadComplaints);
 
+  // --- WebSocket Connection ---
+  function connectWebSocket() {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}`;
+    let ws = new WebSocket(wsUrl);
+
+    ws.onmessage = (event) => {
+      try {
+        const msg = JSON.parse(event.data);
+        if (msg.type === 'COMPLAINT_CREATED' || msg.type === 'COMPLAINT_UPDATED') {
+          console.log('[+] Received WebSocket update:', msg);
+          loadComplaints();
+        }
+      } catch (e) {
+        console.error('Error handling WebSocket message:', e);
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('[-] WebSocket closed, attempting reconnect...');
+      setTimeout(connectWebSocket, 5000);
+    };
+  }
+
   if (token) {
     loadComplaints();
+    connectWebSocket();
   }
 
   const profileModal = document.getElementById('profile-modal');

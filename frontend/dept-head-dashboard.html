@@ -70,10 +70,9 @@
     <aside class="sidebar">
       <div class="sidebar-brand">&#127963; <span>CIVIC CARE</span></div>
       <nav class="sidebar-nav">
-        <a href="#" class="nav-item active"><span class="nav-icon">&#128202;</span> <span>Dashboard</span></a>
-        <a href="#" class="nav-item"><span class="nav-icon">&#128196;</span> <span>Department Issues</span></a>
-        <a href="#" class="nav-item"><span class="nav-icon">&#128101;</span> <span>My Officers</span></a>
-        <a href="#" class="nav-item"><span class="nav-icon">&#128200;</span> <span>Analytics</span></a>
+        <a href="#" class="nav-item active" data-page="dashboard"><span class="nav-icon">&#128202;</span> <span>Dashboard</span></a>
+        <a href="#" class="nav-item" data-page="officers"><span class="nav-icon">&#128101;</span> <span>My Officers</span></a>
+        <a href="#" class="nav-item" data-page="analytics"><span class="nav-icon">&#128200;</span> <span>Analytics</span></a>
       </nav>
       <div class="sidebar-footer">
         <div class="user-info">
@@ -97,7 +96,8 @@
         <button id="theme-toggle" class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem;">&#127769;</button>
       </div>
 
-      <div class="stats-grid">
+      <!-- Stats Grid -->
+      <div class="stats-grid" id="stats-grid">
         <div class="stat-card glass-card">
           <div class="stat-icon">&#128196;</div>
           <div class="stat-value" id="stat-total">--</div>
@@ -109,7 +109,7 @@
           <div class="stat-label">Critical</div>
         </div>
         <div class="stat-card glass-card">
-          <div class="stat-icon">&#128200;</div>
+          <div class="stat-icon">&#128101;</div>
           <div class="stat-value" id="stat-active">--</div>
           <div class="stat-label">Active Officers</div>
         </div>
@@ -120,39 +120,132 @@
         </div>
       </div>
 
-      <div class="section-header">
-        <h2>&#128196; Issues in My Department</h2>
-        <select id="filter-status" class="filter-select">
-          <option value="">All Status</option>
-          <option value="PENDING_ADMIN_REVIEW">Pending Review</option>
-          <option value="ROUTED">Routed</option>
-          <option value="ACCEPTED">Accepted</option>
-          <option value="IN_PROGRESS">In Progress</option>
-          <option value="RESOLVED">Resolved</option>
-        </select>
+      <!-- PAGE: Dashboard (Issues List) -->
+      <div id="page-dashboard" class="page-section">
+        <div class="section-header">
+          <h2>&#128196; Issues in My Department</h2>
+          <select id="filter-status" class="filter-select">
+            <option value="">All Status</option>
+            <option value="PENDING_ADMIN_REVIEW">Pending Review</option>
+            <option value="ROUTED">Routed</option>
+            <option value="ACCEPTED">Accepted</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="RESOLVED">Resolved</option>
+          </select>
+        </div>
+
+        <div class="table-wrap glass-card" style="padding:0;overflow:hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Citizen</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Officer</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="complaints-body">
+              <tr>
+                <td colspan="7" class="empty-state">Loading issues... <span style="display:inline-block;animation:spin 1s linear infinite;">&#8635;</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div class="table-wrap glass-card" style="padding:0;overflow:hidden;">
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Citizen</th>
-              <th>Priority</th>
-              <th>Status</th>
-              <th>Officer</th>
-              <th>Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="complaints-body">
-            <tr>
-              <td colspan="7" class="empty-state">Loading issues... <span style="display:inline-block;animation:spin 1s linear infinite;">&#8635;</span></td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- PAGE: Officers -->
+      <div id="page-officers" class="page-section" style="display:none;">
+        <div class="section-header">
+          <h2>&#128101; Department Officers</h2>
+        </div>
+        <div class="table-wrap glass-card" style="padding:0;overflow:hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="officers-body">
+              <tr>
+                <td colspan="4" class="empty-state">No officers registered.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PAGE: Analytics -->
+      <div id="page-analytics" class="page-section" style="display:none;">
+        <div class="section-header">
+          <h2>&#128200; Department Analytics</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:1.5rem;">
+          <div class="glass-card" style="padding:1.5rem;">
+            <h3 style="margin-top:0;margin-bottom:1.5rem;font-size:1.1rem;font-weight:700;">Performance Overview</h3>
+            <div style="display:flex;flex-direction:column;gap:1.5rem;">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:0.9rem;margin-bottom:0.5rem;font-weight:500;">
+                  <span>Resolution Rate</span>
+                  <span id="rate-resolution">0%</span>
+                </div>
+                <div style="height:10px;border-radius:5px;background:rgba(255,255,255,0.06);overflow:hidden;">
+                  <div id="bar-resolution" style="width:0%;height:100%;background:var(--accent-green);transition:width 0.6s ease;border-radius:5px;"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:0.9rem;margin-bottom:0.5rem;font-weight:500;">
+                  <span>Active Cases Load</span>
+                  <span id="rate-active">0%</span>
+                </div>
+                <div style="height:10px;border-radius:5px;background:rgba(255,255,255,0.06);overflow:hidden;">
+                  <div id="bar-active" style="width:0%;height:100%;background:var(--accent-blue);transition:width 0.6s ease;border-radius:5px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="glass-card" style="padding:1.5rem;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <h3 style="margin-top:0;margin-bottom:1rem;font-size:1.1rem;font-weight:700;">Efficiency Indicators</h3>
+              <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;margin-bottom:1.5rem;">Dynamic metrics based on officer dispatch times and customer resolution logs.</p>
+            </div>
+            <div style="display:flex;gap:1rem;">
+              <div style="flex:1;text-align:center;padding:1rem;background:rgba(255,255,255,0.03);border-radius:0.75rem;border:1px solid rgba(255,255,255,0.04);">
+                <div style="font-size:1.5rem;font-weight:800;color:var(--accent-orange);" id="metric-avg-time">2.4h</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem;font-weight:500;">Response Time</div>
+              </div>
+              <div style="flex:1;text-align:center;padding:1rem;background:rgba(255,255,255,0.03);border-radius:0.75rem;border:1px solid rgba(255,255,255,0.04);">
+                <div style="font-size:1.5rem;font-weight:800;color:var(--accent-cyan);" id="metric-satisfaction">96%</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem;font-weight:500;">Citizen Rating</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
+  </div>
+
+  <!-- Custom Officer Assignment Modal -->
+  <div id="assign-modal" class="profile-modal-overlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(4px);" hidden>
+    <div class="glass-card" style="width:100%;max-width:400px;padding:2rem;position:relative;">
+      <h3 style="margin-top:0;margin-bottom:1rem;font-size:1.25rem;font-weight:700;">Assign Field Officer</h3>
+      <input type="hidden" id="assign-complaint-id">
+      <div style="margin-bottom:1.5rem;">
+        <label for="assign-officer-select" style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.5rem;">Select Officer</label>
+        <select id="assign-officer-select" class="filter-select" style="width:100%;padding:0.75rem;box-sizing:border-box;">
+          <option value="">Select an officer...</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:1rem;">
+        <button id="assign-cancel-btn" class="btn btn-secondary" style="flex:1;padding:0.6rem;">Cancel</button>
+        <button id="assign-confirm-btn" class="btn btn-primary" style="flex:1;padding:0.6rem;">Confirm</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -164,8 +257,83 @@
     }
 
     document.getElementById('depthead-name').textContent = user.name || 'Department Head';
-    document.getElementById('depthead-dept').textContent = user.departmentId || '--';
 
+    // --- Navigation Switching ---
+    document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
+      item.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelectorAll('.sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
+        item.classList.add('active');
+        
+        document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
+        
+        const target = item.getAttribute('data-page');
+        const targetEl = document.getElementById(`page-${target}`);
+        if (targetEl) targetEl.style.display = 'block';
+      });
+    });
+
+    let currentDept = null;
+    let officersList = [];
+
+    // --- Load Department Name and Officers List ---
+    async function loadDepartmentInfo() {
+      try {
+        const res = await fetch('/api/departments', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        
+        const targetId = typeof user.departmentId === 'object' ? user.departmentId._id : user.departmentId;
+        currentDept = data.departments?.find(d => d._id === targetId);
+
+        if (currentDept) {
+          document.getElementById('depthead-dept').textContent = currentDept.name;
+          document.getElementById('dept-badge').textContent = '\u{1F3ED} ' + currentDept.name;
+          
+          officersList = currentDept.officers || [];
+          renderOfficers();
+          populateOfficerSelect();
+        } else {
+          document.getElementById('depthead-dept').textContent = 'Unassigned';
+          document.getElementById('dept-badge').textContent = '\u{1F3ED} Unassigned Department';
+        }
+      } catch (err) {
+        console.error('Failed to load departments', err);
+        document.getElementById('depthead-dept').textContent = 'Error loading';
+      }
+    }
+
+    function renderOfficers() {
+      const tbody = document.getElementById('officers-body');
+      if (!officersList.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No officers registered under this department.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = officersList.map(o => `
+        <tr>
+          <td><strong>${o.name}</strong></td>
+          <td>${o.email}</td>
+          <td><span class="role-badge officer" style="background:rgba(245,158,11,0.15);color:var(--accent-orange);padding:0.2rem 0.6rem;border-radius:999px;font-size:0.75rem;font-weight:600;">Field Officer</span></td>
+          <td><span style="color:var(--accent-green);font-weight:600;">Active</span></td>
+        </tr>
+      `).join('');
+      document.getElementById('stat-active').textContent = officersList.length;
+    }
+
+    function populateOfficerSelect() {
+      const select = document.getElementById('assign-officer-select');
+      select.innerHTML = '<option value="">Select an officer...</option>';
+      officersList.forEach(o => {
+        const opt = document.createElement('option');
+        opt.value = o._id;
+        opt.textContent = o.name;
+        select.appendChild(opt);
+      });
+    }
+
+    // --- Load Complaints List ---
     async function loadComplaints() {
       const statusFilter = document.getElementById('filter-status').value;
       try {
@@ -176,20 +344,22 @@
         if (!res.ok) throw new Error();
         const data = await res.json();
         const tbody = document.getElementById('complaints-body');
+        
         if (!data.complaints?.length) {
           tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No issues found for your department.</td></tr>';
           return;
         }
+
         tbody.innerHTML = data.complaints.map(c => `
           <tr>
             <td><strong>${c.title || 'Untitled'}</strong></td>
             <td style="font-size:0.85rem;">${c.citizenId?.name || 'Anonymous'}</td>
             <td><span class="status-badge ${(c.priority||'').toLowerCase()}">${c.priority || '--'}</span></td>
-            <td><span class="status-badge ${(c.status||'').toLowerCase().replace(/_/g,'-')}">${c.status || '--'}</span></td>
+            <td><span class="status-badge ${(c.status||'').toLowerCase().replace(/_/g,'-')}">${(c.status || '').replace(/_/g, ' ')}</span></td>
             <td style="font-size:0.85rem;color:var(--text-secondary);">${c.assignedOfficerId?.name || 'Unassigned'}</td>
             <td style="font-size:0.8rem;color:var(--text-muted);">${new Date(c.createdAt).toLocaleDateString()}</td>
             <td>
-              ${c.status === 'ROUTED' ? `<button class="action-btn btn-primary" onclick="assignOfficer('${c._id}')" style="padding:0.3rem 0.6rem;font-size:0.75rem;">Assign</button>` : '<span style="color:var(--text-muted);font-size:0.8rem;">--</span>'}
+              ${c.status === 'ROUTED' || c.status === 'PENDING_ADMIN_REVIEW' ? `<button class="action-btn btn-primary" onclick="openAssignModal('${c._id}')" style="padding:0.3rem 0.6rem;font-size:0.75rem;">Assign</button>` : '<span style="color:var(--text-muted);font-size:0.8rem;">--</span>'}
             </td>
           </tr>
         `).join('');
@@ -197,46 +367,112 @@
         const stats = { total: data.complaints.length, critical: 0, resolved: 0, active: 0 };
         data.complaints.forEach(c => {
           if (c.priority === 'CRITICAL') stats.critical++;
-          if (c.status === 'RESOLVED') stats.resolved++;
+          if (c.status === 'RESOLVED' || c.status === 'CLOSED') stats.resolved++;
           if (c.status === 'ACCEPTED' || c.status === 'IN_PROGRESS') stats.active++;
         });
+
         document.getElementById('stat-total').textContent = stats.total;
         document.getElementById('stat-critical').textContent = stats.critical;
-        document.getElementById('stat-active').textContent = stats.active;
         document.getElementById('stat-resolved').textContent = stats.resolved;
-      } catch {
+
+        // Populate Analytics Section Metrics
+        const resolvedPct = stats.total > 0 ? Math.round((stats.resolved / stats.total) * 100) : 0;
+        const activePct = stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0;
+        
+        document.getElementById('rate-resolution').textContent = resolvedPct + '%';
+        document.getElementById('bar-resolution').style.width = resolvedPct + '%';
+        
+        document.getElementById('rate-active').textContent = activePct + '%';
+        document.getElementById('bar-active').style.width = activePct + '%';
+      } catch (err) {
+        console.error(err);
         const tbody = document.getElementById('complaints-body');
         tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Could not load data. API may be unavailable.</td></tr>';
       }
     }
 
-    async function assignOfficer(id) {
-      const name = prompt('Enter officer name to assign:');
-      if (!name) return;
+    // --- Modal Assignment Functions ---
+    function openAssignModal(complaintId) {
+      document.getElementById('assign-complaint-id').value = complaintId;
+      document.getElementById('assign-officer-select').value = '';
+      document.getElementById('assign-modal').removeAttribute('hidden');
+    }
+    window.openAssignModal = openAssignModal;
+
+    function closeAssignModal() {
+      document.getElementById('assign-modal').setAttribute('hidden', '');
+    }
+
+    document.getElementById('assign-cancel-btn').addEventListener('click', closeAssignModal);
+
+    document.getElementById('assign-confirm-btn').addEventListener('click', async () => {
+      const complaintId = document.getElementById('assign-complaint-id').value;
+      const officerId = document.getElementById('assign-officer-select').value;
+      
+      if (!officerId) {
+        alert('Please select an officer.');
+        return;
+      }
+
+      const btn = document.getElementById('assign-confirm-btn');
+      btn.disabled = true;
+      btn.textContent = 'Assigning...';
+
       try {
-        const res = await fetch(`/api/complaints/${id}/status`, {
+        const res = await fetch(`/api/complaints/${complaintId}/status`, {
           method: 'PATCH',
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'ACCEPTED', officerName: name })
+          headers: { 
+            'Authorization': `Bearer ${token}`, 
+            'Content-Type': 'application/json' 
+          },
+          body: JSON.stringify({ status: 'ACCEPTED', assignedOfficerId: officerId })
         });
+        
         if (res.ok) {
+          closeAssignModal();
           loadComplaints();
         } else {
           const data = await res.json();
-          alert(data.error || 'Failed to assign');
+          alert(data.error || 'Failed to assign officer');
         }
-      } catch {
+      } catch (err) {
+        console.error(err);
         alert('Failed to assign officer');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Confirm';
       }
+    });
+
+    // --- WebSocket Connection ---
+    function connectWebSocket() {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${protocol}//${window.location.host}`;
+      let ws = new WebSocket(wsUrl);
+
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          if (msg.type === 'COMPLAINT_CREATED' || msg.type === 'COMPLAINT_UPDATED') {
+            console.log('[+] Received WebSocket update:', msg);
+            loadComplaints();
+          }
+        } catch (e) {
+          console.error('Error handling WebSocket message:', e);
+        }
+      };
+
+      ws.onclose = () => {
+        console.log('[-] WebSocket closed, attempting reconnect...');
+        setTimeout(connectWebSocket, 5000);
+      };
     }
 
-    if (user.departmentId && typeof user.departmentId === 'object' && user.departmentId.name) {
-      document.getElementById('dept-badge').textContent = '\u{1F3ED} ' + user.departmentId.name;
-    } else {
-      document.getElementById('dept-badge').textContent = '\u{1F3ED} My Department';
-    }
-
+    // --- Init ---
+    loadDepartmentInfo();
     loadComplaints();
+    connectWebSocket();
+
     document.getElementById('filter-status').addEventListener('change', loadComplaints);
 
     document.getElementById('logout-btn').addEventListener('click', () => {

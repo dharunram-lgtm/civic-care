@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/surfaces.css">
   <link rel="stylesheet" href="/css/citizen-report.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
   <nav class="report-nav">
@@ -49,18 +50,46 @@
 
     <div class="report-card glass-card">
       <div id="step-1" class="form-step active">
-        <h2>&#128247; Upload an Image</h2>
-        <p>Drag & drop your photo here, or click to browse. Supported: JPG, PNG, WebP (max 10MB).</p>
-        <div id="drop-zone" class="drop-zone">
-          <div class="drop-zone-content">
-            <div class="drop-icon">&#128247;</div>
-            <p><strong>Drop your image here</strong></p>
-            <p style="font-size:0.85rem;color:var(--text-muted);">or click to browse files</p>
+        <h2>&#128247; Capture Photo</h2>
+        <p>Use your camera to take a live photo of the civic issue. Only live capture is allowed.</p>
+        
+        <div class="camera-container" id="camera-container">
+          <!-- Live Stream View -->
+          <div class="camera-viewport" id="camera-viewport">
+            <video id="webcam" autoplay playsinline muted></video>
+            <img id="preview" class="preview-image" hidden>
+            
+            <div class="camera-overlay" id="camera-overlay">
+              <div class="focus-brackets"></div>
+              <div class="camera-status" id="camera-status">Initializing camera...</div>
+            </div>
           </div>
-          <input type="file" id="file-input" accept="image/*" hidden>
-          <img id="preview" class="preview-image" hidden>
-          <button id="remove-image" class="btn btn-secondary" style="display:none;margin-top:1rem;padding:0.5rem 1rem;font-size:0.85rem;">&#10005; Remove</button>
+          
+          <!-- Camera Controls -->
+          <div class="camera-controls" id="camera-controls">
+            <button id="capture-btn" class="shutter-btn" title="Capture Photo" type="button">
+              <span class="shutter-inner"></span>
+            </button>
+            <button id="switch-btn" class="icon-btn" title="Switch Camera" type="button" style="display:none;">
+              &#128257;
+            </button>
+            <button id="retake-btn" class="btn btn-secondary" style="display:none;" type="button">
+              &#8635; Retake Photo
+            </button>
+          </div>
+
+          <!-- Fallback input for devices without inline webcam / denied permission -->
+          <div id="camera-fallback" class="camera-fallback" style="display:none;">
+            <p class="fallback-text">&#9888; Camera access needed. Click below to take a photo using your device camera.</p>
+            <label for="fallback-input" class="btn btn-primary fallback-btn" style="display:inline-block;cursor:pointer;">
+              &#128247; Open Device Camera
+            </label>
+            <input type="file" id="fallback-input" accept="image/*" capture="environment" class="fallback-input" style="display:none;">
+            <p id="fallback-filename" class="fallback-filename" style="margin-top:0.5rem;font-size:0.85rem;color:var(--accent-green);"></p>
+          </div>
         </div>
+        
+        <canvas id="photo-canvas" style="display:none;"></canvas>
       </div>
 
       <div id="step-2" class="form-step">
@@ -74,11 +103,12 @@
           <div id="location-coords" class="location-coords" hidden>
             <div class="coord-row"><span>Latitude:</span> <span id="lat-display">--</span></div>
             <div class="coord-row"><span>Longitude:</span> <span id="lng-display">--</span></div>
-            <div class="coord-row" style="color:var(--accent-green);">&#10003; GPS acquired</div>
+            <div id="gps-status-row" class="coord-row" style="color:var(--accent-green);">&#10003; GPS acquired</div>
           </div>
           <div id="location-error" class="location-error" hidden>
             &#9888; Could not get GPS. Enter your location manually below.
           </div>
+          <button id="btn-use-gps" class="btn btn-secondary" style="margin-top: 0.75rem; padding: 0.45rem 0.9rem; font-size: 0.8rem; display: none; align-items: center; gap: 0.4rem; cursor: pointer;">📍 Use GPS Location</button>
         </div>
         <div class="manual-coords" style="margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
           <div>
@@ -90,6 +120,7 @@
             <input type="number" id="manual-lng" step="any" placeholder="77.2090" class="form-input">
           </div>
         </div>
+        <div id="report-map" style="height: 220px; border-radius: 12px; margin-top: 1rem; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); z-index: 10;"></div>
       </div>
 
       <div id="step-3" class="form-step">
@@ -123,6 +154,7 @@
     const _token = localStorage.getItem('token');
     if (!_token) { window.location.href = '/login.html'; }
   </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="/js/citizen-report.js"></script>
 </body>
 </html>
